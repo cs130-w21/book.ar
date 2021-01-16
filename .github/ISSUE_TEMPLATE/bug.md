@@ -1,26 +1,26 @@
 ---
-name: Bug
-about: Provide a concise description of a bug
-title: "[BUG] -"
-labels: bug
-assignees: ''
-
+name: "\U0001F41B Bug Report"
+about: Report a bug
+title: "🐛 Bug: "
+labels: bug, needs-triage
 ---
 
-## Description
-Give a clear and concise description of what the bug is.
+<!-- description of the bug: -->
 
-## Steps to Reproduce
-Steps to reproduce the bug:
-- [ ] Step 1
-- [ ] Step 2
-- [ ] Step 3
+### Reproduction Steps
 
-## Expected Behavior
-Give a clear and concise description of what should be the expected behavior.
+<!-- how to reproduce the bug in code -->
 
-## Additional Context
-Enter any other details such as dependencies, environment, examples, etc.
+### What is happening?
 
-## Relevant screenshots
-If applicable, add screenshots to help illustrate the bug.
+<!-- What is the behavior you were seeing? If you got an error, paste it here. -->
+
+
+### Suggestions
+
+<!-- e.g. detailed explanation, suggestions on how to fix, eg. associated pull-request, stackoverflow, etc -->
+
+
+--- 
+
+This is a :bug: Bug Report
