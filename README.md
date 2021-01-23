@@ -8,7 +8,7 @@
 -->
 
 [mergify]: https://mergify.io
-[mergify-status]: https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/uclaacm/playnet&style=flat
+[mergify-status]: https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/cs130-w21/book.ar&style=flat
 
 This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.md). By participating, you are 
 expected to uphold this code.
