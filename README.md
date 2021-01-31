@@ -31,7 +31,7 @@ If you have a fix, even better! Check out the follow section to learn how to con
 
 ## Contributing
 
-Thanks for your interest in contributing to `Playnet`! ❤️
+Thanks for your interest in contributing to `book.ar`! ❤️
 
 Here's a quick guide on how to get started.
 
