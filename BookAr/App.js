@@ -52,23 +52,6 @@ export default function App() {
           }
         />
 
-        <Button
-          title="Take video"
-          onPress={() =>
-            ImagePicker.launchCamera({mediaType: 'video'}, (response) => {
-              setResponse(response);
-            })
-          }
-        />
-
-        <Button
-          title="Select video"
-          onPress={() =>
-            ImagePicker.launchImageLibrary({mediaType: 'video'}, (response) => {
-              setResponse(response);
-            })
-          }
-        />
 
         <View style={styles.response}>
           <Text>Res: {JSON.stringify(response)}</Text>

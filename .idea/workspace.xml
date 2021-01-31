@@ -31,10 +31,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="40e65601-aa35-4dc0-a0c1-611e315bdb9e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BookAr/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/BookAr/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookAr/Button.js" beforeDir="false" afterPath="$PROJECT_DIR$/BookAr/src/Button.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookAr/image_picker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/BookAr/src/image_picker.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookAr/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/BookAr/src/types.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
