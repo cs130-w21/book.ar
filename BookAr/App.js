@@ -8,9 +8,9 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
-import {Button} from './Button';
+import {Button} from './src/Button';
 
-import * as ImagePicker from './image_picker.ts/';
+import * as ImagePicker from './src/image_picker.ts/';
 
 export default function App() {
   const [response, setResponse] = React.useState(null);
