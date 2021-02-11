@@ -11,7 +11,7 @@ import {
 import {Button} from './src/Button';
 
 import * as ImagePicker from './src/image_picker.ts/';
-
+import * as CloudVision from './src/cloud_vision.ts';
 export default function App() {
   const [response, setResponse] = React.useState(null);
 
@@ -29,7 +29,8 @@ export default function App() {
                 maxWidth: 200,
               },
               (response) => {
-                setResponse(response);
+                CloudVision.getTextFromImage(response["base64"], setResponse);
+
               },
             )
           }
@@ -46,7 +47,7 @@ export default function App() {
                 maxWidth: 200,
               },
               (response) => {
-                setResponse(response);
+                CloudVision.getTextFromImage(response["base64"], setResponse);
               },
             )
           }
