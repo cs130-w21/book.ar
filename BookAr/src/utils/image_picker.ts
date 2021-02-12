@@ -1,7 +1,7 @@
 import {NativeModules} from 'react-native';
 
-import {CameraOptions, ImageLibraryOptions, Callback} from './types';
-export * from './types';
+import {CameraOptions, ImageLibraryOptions, Callback} from '../types';
+export * from '../types';
 
 const DEFAULT_OPTIONS: CameraOptions = {
   mediaType: 'photo',
@@ -11,12 +11,12 @@ const DEFAULT_OPTIONS: CameraOptions = {
   maxHeight: 0,
   includeBase64: false,
   saveToPhotos: false,
-  durationLimit: 0
+  durationLimit: 0,
 };
 
 export function launchCamera(options: CameraOptions, callback: Callback) {
   if (typeof callback !== 'function') {
-    console.error("Send proper callback function, check API");
+    console.error('Send proper callback function, check API');
     return;
   }
 
@@ -31,7 +31,7 @@ export function launchImageLibrary(
   callback: Callback,
 ) {
   if (typeof callback !== 'function') {
-    console.error("Send proper callback function, check API");
+    console.error('Send proper callback function, check API');
     return;
   }
   NativeModules.ImagePickerManager.launchImageLibrary(

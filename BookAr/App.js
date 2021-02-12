@@ -1,91 +1,60 @@
-import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  Platform,
-  SafeAreaView,
-} from 'react-native';
-import {Button} from './src/Button';
-
-import * as ImagePicker from './src/image_picker.ts/';
-
-export default function App() {
-  const [response, setResponse] = React.useState(null);
-
-  return (
-    <SafeAreaView>
-      <ScrollView>
-        <Button
-          title="Take image"
-          onPress={() =>
-            ImagePicker.launchCamera(
-              {
-                mediaType: 'photo',
-                includeBase64: true,
-                maxHeight: 200,
-                maxWidth: 200,
-              },
-              (response) => {
-                setResponse(response);
-              },
-            )
-          }
-        />
-
-        <Button
-          title="Select image"
-          onPress={() =>
-            ImagePicker.launchImageLibrary(
-              {
-                mediaType: 'photo',
-                includeBase64: true,
-                maxHeight: 200,
-                maxWidth: 200,
-              },
-              (response) => {
-                setResponse(response);
-              },
-            )
-          }
-        />
-
-
-        <View style={styles.response}>
-          <Text>Res: {JSON.stringify(response)}</Text>
-        </View>
-
-        {response && (
-          <View style={styles.image}>
-            <Image
-              style={{width: 200, height: 200}}
-              source={{uri: response.uri}}
-            />
-          </View>
-        )}
-      </ScrollView>
-    </SafeAreaView>
-  );
+import 'react-native-gesture-handler';
+import React, {useEffect, useState} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {LoginScreen, HomeScreen, RegistrationScreen} from './src/screens';
+import {firebase} from './src/utils/firebase';
+import {decode, encode} from 'base-64';
+if (!global.btoa) {
+  global.btoa = encode;
+}
+if (!global.atob) {
+  global.atob = decode;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  button: {
-    marginVertical: 24,
-    marginHorizontal: 24,
-  },
-  image: {
-    marginVertical: 24,
-    alignItems: 'center',
-  },
-  response: {
-    marginVertical: 16,
-    marginHorizontal: 8,
-  },
-});
+const Stack = createStackNavigator();
+
+export default function App() {
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const usersRef = firebase.firestore().collection('users');
+    firebase.auth().onAuthStateChanged((userData) => {
+      if (userData) {
+        usersRef
+          .doc(userData.uid)
+          .get()
+          .then((doc) => {
+            const data = doc.data();
+            setLoading(false);
+            setUser(data);
+          })
+          .catch((err) => setLoading(false));
+      } else {
+        setLoading(false);
+      }
+    });
+  }, []);
+
+  if (loading) {
+    return <></>;
+  }
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        {user ? (
+          <Stack.Screen name="Home">
+            {(props) => <HomeScreen {...props} extraData={user} />}
+          </Stack.Screen>
+        ) : (
+          <>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Registration" component={RegistrationScreen} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
