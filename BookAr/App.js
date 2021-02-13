@@ -1,91 +1,79 @@
-import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  Platform,
-  SafeAreaView,
-} from 'react-native';
-import {Button} from './src/Button';
+import 'react-native-gesture-handler';
+import React, {useEffect, useState} from 'react';
+import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {LoginScreen, RegistrationScreen} from './src/screens';
+import {firebase} from './src/utils/firebase';
+import {decode, encode} from 'base-64';
+import HomeTabs from './src/HomeTabs';
 
-import * as ImagePicker from './src/image_picker.ts/';
-
-export default function App() {
-  const [response, setResponse] = React.useState(null);
-
-  return (
-    <SafeAreaView>
-      <ScrollView>
-        <Button
-          title="Take image"
-          onPress={() =>
-            ImagePicker.launchCamera(
-              {
-                mediaType: 'photo',
-                includeBase64: true,
-                maxHeight: 200,
-                maxWidth: 200,
-              },
-              (response) => {
-                setResponse(response);
-              },
-            )
-          }
-        />
-
-        <Button
-          title="Select image"
-          onPress={() =>
-            ImagePicker.launchImageLibrary(
-              {
-                mediaType: 'photo',
-                includeBase64: true,
-                maxHeight: 200,
-                maxWidth: 200,
-              },
-              (response) => {
-                setResponse(response);
-              },
-            )
-          }
-        />
-
-
-        <View style={styles.response}>
-          <Text>Res: {JSON.stringify(response)}</Text>
-        </View>
-
-        {response && (
-          <View style={styles.image}>
-            <Image
-              style={{width: 200, height: 200}}
-              source={{uri: response.uri}}
-            />
-          </View>
-        )}
-      </ScrollView>
-    </SafeAreaView>
-  );
+if (!global.btoa) {
+  global.btoa = encode;
+}
+if (!global.atob) {
+  global.atob = decode;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  button: {
-    marginVertical: 24,
-    marginHorizontal: 24,
-  },
-  image: {
-    marginVertical: 24,
-    alignItems: 'center',
-  },
-  response: {
-    marginVertical: 16,
-    marginHorizontal: 8,
-  },
-});
+const Stack = createStackNavigator();
+
+function getHeaderTitle(route) {
+  // If the focused route is not found, we need to assume it's the initial screen
+  // This can happen during if there hasn't been any navigation inside the screen
+  // In our case, it's "Feed" as that's the first screen inside the navigator
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+
+  return routeName;
+}
+
+export default function App() {
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
+  const signOut = () => {
+    firebase.auth().signOut().then(() => setUser(null));
+  }
+
+  useEffect(() => {
+    const usersRef = firebase.firestore().collection('users');
+    firebase.auth().onAuthStateChanged((userData) => {
+      if (userData) {
+        usersRef
+          .doc(userData.uid)
+          .get()
+          .then((doc) => {
+            const data = doc.data();
+            setLoading(false);
+            setUser(data);
+          })
+          .catch((err) => setLoading(false));
+      } else {
+        setLoading(false);
+      }
+    });
+  }, []);
+
+  if (loading) {
+    return <></>;
+  }
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        {user ? (
+          <Stack.Screen
+            name="Home"
+            options={({ route }) => ({
+              headerTitle: getHeaderTitle(route),
+            })}>
+            {(props) => <HomeTabs {...props} extraData={{user, signOut}} />}
+          </Stack.Screen>
+        ) : (
+          <>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Registration" component={RegistrationScreen} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
