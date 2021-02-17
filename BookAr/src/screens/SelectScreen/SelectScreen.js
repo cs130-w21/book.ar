@@ -3,7 +3,7 @@ import {Text, View, Image, ScrollView, SafeAreaView} from 'react-native';
 import styles from './styles';
 import {Button} from '../../utils/Button';
 import * as ImagePicker from '../../utils/image_picker.ts';
-
+import * as CloudVision from '../../utils/cloud_vision.ts';
 export default function SelectScreen({navigation, extraData}) {
   const [response, setResponse] = React.useState(null);
 
@@ -21,7 +21,7 @@ export default function SelectScreen({navigation, extraData}) {
                 maxWidth: 200,
               },
               (res) => {
-                setResponse(res);
+                CloudVision.getTextFromImage(res['base64'], setResponse);
               },
             )
           }
@@ -38,7 +38,7 @@ export default function SelectScreen({navigation, extraData}) {
                 maxWidth: 200,
               },
               (res) => {
-                setResponse(res);
+                CloudVision.getTextFromImage(res['base64'], setResponse);
               },
             )
           }
