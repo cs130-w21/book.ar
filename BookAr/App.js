@@ -14,7 +14,6 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-
 const Stack = createStackNavigator();
 
 function getHeaderTitle(route) {
