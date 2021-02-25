@@ -1,4 +1,4 @@
-from model import BookRecommendation
+from models import BookRecommendation
 
 def make_recommendation(request):
   request_json = request.get_json()
