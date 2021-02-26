@@ -16,6 +16,8 @@ install:
   - cd server
   - pip install -r requirements.txt
 
+script: pytest
+
 before-deploy:
   - openssl aes-256-cbc -K $encrypted_db2095f63ba3_key -iv $encrypted_db2095f63ba3_iv
     -in deploy_rsa.enc -out /tmp/deploy_rsa -d
