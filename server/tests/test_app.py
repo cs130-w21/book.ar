@@ -1,3 +1,3 @@
-def test_index() -> None:
+def test_index(client) -> None:
   rv = client.get('/')
-  assert rv.data == 'Hello World'
+  assert rv.data == b'Hello World'
