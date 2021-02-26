@@ -4,3 +4,4 @@ Flask
 numpy
 pandas
 torch
+pytest
