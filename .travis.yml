@@ -3,6 +3,7 @@ branches:
   - main
 
 language: python
+cache: pip
 python:
   - '3.8'
 
@@ -16,7 +17,7 @@ install:
   - cd server
   - pip install -r requirements.txt
 
-script: pytest
+script: cd server && pytest
 
 before-deploy:
   - openssl aes-256-cbc -K $encrypted_db2095f63ba3_key -iv $encrypted_db2095f63ba3_iv
