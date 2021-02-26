@@ -13,7 +13,8 @@ before_install:
   - bash scripts/preflight.sh || travis_terminate 0
 
 install:
-  - pip install -r requirements
+  - cd server
+  - pip install -r requirements.txt
 
 before-deploy:
   - openssl aes-256-cbc -K $encrypted_db2095f63ba3_key -iv $encrypted_db2095f63ba3_iv
