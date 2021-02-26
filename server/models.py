@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import pickle
-import torch.nn as nn
+# import torch.nn as nn
 
 class BookRecommendation():
     def __init__(self, book_scores=None):
