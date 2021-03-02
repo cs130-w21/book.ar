@@ -16,7 +16,7 @@ class BookRecInterface:
         with open('{}{}.pth'.format(input_path, input_model_name), "rb") as fp:   # Unpickling
             model = pickle.load(fp)
         self.book_ratings = model.book_ratings
-    
+
 
 
 class PopularityBookRec(BookRecInterface):
@@ -138,16 +138,18 @@ class TFIDFBookRec(BookRecInterface):
         score_matrix = np.concatenate([tfidf_score, author_score, publisher_score, year_score]).astype(float)
         return self.score_weights.dot(score_matrix).max()
 
-    def make_recommendation(self, books):
+    def make_recommendation(self, books, verbose=True):
         book, score = self._make_recommendation(books)
-        print('Recommend book "{}" with score {} among {} books'.format(book, score, len(books)))
+        if verbose:
+            print('Recommend book "{}" with score {} among {} books'.format(book.title, score, len(books)))
+        return book
     
     def _make_recommendation(self, books):
         scores = []
         for book in books:
             scores += [self.compute_book_score(book)]
         max_idx = np.array(scores).argmax()
-        return books[max_idx].title, scores[max_idx]
+        return books[max_idx], scores[max_idx]
     
     def load_model(self, input_path='saved_model/', input_model_name='book_rec_model'):
         with open('{}{}.pth'.format(input_path, input_model_name), "rb") as fp:   # Unpickling
