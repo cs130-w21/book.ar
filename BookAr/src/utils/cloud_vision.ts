@@ -2,7 +2,7 @@ export async function getTextFromImage(base64: string, setResponse) {
   let body = JSON.stringify({
     requests: [
       {
-        features: [{type: 'TEXT_DETECTION', maxResults: 5}],
+        features: [{type: 'DOCUMENT_TEXT_DETECTION', maxResults: 10}],
         image: {
           content: base64,
         },
@@ -23,8 +23,13 @@ export async function getTextFromImage(base64: string, setResponse) {
   );
 
   let data = await response.json(); // Holds bounding box and language information as well
-  var rawTitles = data['responses'][0]['textAnnotations'].map(function (e) {
-    return e['description'];
-  });
+  var rawTitles = data['responses'][0]['fullTextAnnotation']['pages'][0]['blocks'].map(b => {
+    let paras = b['paragraphs'];
+    let para_words = paras.map(p => {
+      let words = p['words'];
+      return words.map(w => w['symbols'].map(s => s['text']).join('')).join(' ');
+    });
+    return para_words;
+  }).flat();
   setResponse(rawTitles);
 }

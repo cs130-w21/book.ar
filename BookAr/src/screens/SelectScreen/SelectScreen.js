@@ -46,7 +46,7 @@ export default function SelectScreen({navigation, extraData}) {
         />
 
         <View style={styles.response}>
-          <Text>Res: {JSON.stringify(response)}</Text>
+          <Text>Res: {JSON.stringify(response, null, 2)}</Text>
         </View>
 
         {response && (
