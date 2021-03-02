@@ -4,6 +4,7 @@ import styles from './styles';
 import {Button} from '../../utils/Button';
 import * as ImagePicker from '../../utils/image_picker.ts';
 import * as CloudVision from '../../utils/cloud_vision.ts';
+
 export default function SelectScreen({navigation, extraData}) {
   const [response, setResponse] = React.useState(null);
 
@@ -17,8 +18,8 @@ export default function SelectScreen({navigation, extraData}) {
               {
                 mediaType: 'photo',
                 includeBase64: true,
-                maxHeight: 200,
-                maxWidth: 200,
+                maxHeight: 1024,
+                maxWidth: 1024,
               },
               (res) => {
                 CloudVision.getTextFromImage(res['base64'], setResponse);
@@ -34,8 +35,8 @@ export default function SelectScreen({navigation, extraData}) {
               {
                 mediaType: 'photo',
                 includeBase64: true,
-                maxHeight: 200,
-                maxWidth: 200,
+                maxHeight: 1024,
+                maxWidth: 1024,
               },
               (res) => {
                 CloudVision.getTextFromImage(res['base64'], setResponse);
@@ -51,7 +52,7 @@ export default function SelectScreen({navigation, extraData}) {
         {response && (
           <View style={styles.image}>
             <Image
-              style={{width: 200, height: 200}}
+              style={{width: 1024, height: 1024}}
               source={{uri: response.uri}}
             />
           </View>
