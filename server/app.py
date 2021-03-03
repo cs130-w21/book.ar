@@ -8,6 +8,7 @@ def create_app():
   def hello_world():
     return 'Hello World'
 
+  # POST routes still require GET to be enabled for requests to work
   @app.route('/recommend', methods=['GET', 'POST'])
   def make_recommendation():
     request_json = request.get_json()
