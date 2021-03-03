@@ -22,7 +22,7 @@ export default function SelectScreen({navigation, extraData}) {
                 maxWidth: 1024,
               },
               (res) => {
-                CloudVision.getTextFromImage(res['base64'], setResponse);
+                CloudVision.getRecommendedBooks(res['base64'], setResponse);
               },
             )
           }
@@ -39,7 +39,7 @@ export default function SelectScreen({navigation, extraData}) {
                 maxWidth: 1024,
               },
               (res) => {
-                CloudVision.getTextFromImage(res['base64'], setResponse);
+                CloudVision.getRecommendedBooks(res['base64'], setResponse);
               },
             )
           }
