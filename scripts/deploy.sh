@@ -17,5 +17,5 @@ ssh -o StrictHostKeyChecking=no\
    opc@${INSTANCE}\
     "sudo docker stop current-container &&\
      sudo docker rm current-container &&\
-     sudo docker run --name=current-container --restart unless-stopped -d -p 80:3000 ${IMAGE}:${GIT_VERSION} &&\
+     sudo docker run --name=current-container --restart unless-stopped -d -p 80:5000 ${IMAGE}:${GIT_VERSION} &&\
      sudo docker system prune -a -f"
