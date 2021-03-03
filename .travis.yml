@@ -8,9 +8,10 @@ python:
 services:
 - docker
 before_install:
-- openssl aes-256-cbc -K $encrypted_db2095f63ba3_key -iv $encrypted_db2095f63ba3_iv
-  -in deploy_rsa.enc -out deploy_rsa -d
 - bash scripts/preflight.sh || travis_terminate 0
+- openssl aes-256-cbc -K $encrypted_db2095f63ba3_key -iv $encrypted_db2095f63ba3_iv
+  -in server/deploy_rsa.enc -out /tmp/deploy_rsa -d
+
 install:
 - cd server
 - pip install -r requirements.txt
