@@ -8,7 +8,7 @@ def create_app():
   def hello_world():
     return 'Hello World'
 
-  @app.route('/recommend', methods=['POST'])
+  @app.route('/recommend', methods=['GET', 'POST'])
   def make_recommendation():
     request_json = request.get_json()
     if request_json and 'books' in request_json:
