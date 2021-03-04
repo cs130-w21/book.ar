@@ -4,7 +4,6 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'black',
   },
   buttonContainer: {
     flex: 0,
@@ -12,12 +11,11 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   preview: {
-    flex: 1,
+    flex: 0.7,
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
   capture: {
-    flex: 0,
     fontSize: 14,
     backgroundColor: '#fff',
     borderRadius: 5,
@@ -26,4 +24,8 @@ export default StyleSheet.create({
     alignSelf: 'center',
     margin: 20,
   },
+  response: {
+    flex: 0.3,
+    overflow: 'scroll'
+  }
 });

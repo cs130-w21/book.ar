@@ -42,6 +42,7 @@ export async function getRecommendedBooks(base64: string, setResponse) {
       body: body,
     },
   );
+  console.log('fetching vision data');
 
   const data = await response.json(); // Holds bounding box and language information as well
   const rawTitles = data['responses'][0]['fullTextAnnotation']['pages'][0]['blocks'].map(b => {
@@ -53,18 +54,42 @@ export async function getRecommendedBooks(base64: string, setResponse) {
     return para_words;
   });
 
+  console.log(rawTitles);
+
+  console.log('fetching titles');
   let titles = [];
   for (const title of rawTitles) {
     let response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${title[0]}`, { method: 'GET' });
     let json = await response.json();
-    if (!json.items) return;
-    titles.push(json.items[0].volumeInfo.title);
+    if (!json.items) continue;
+    titles.push({ title: json.items[0].volumeInfo.title });
   }
 
-  setResponse(titles);
+  console.log(titles);
 
   // Get recommendations from server
   const recResponse = await fetch('http://129.146.110.3/recommend', {
-    method: 'GET'
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ books: titles, prefs: titles })
   });
+  let recJson = await recResponse.json();
+
+  console.log('getting book data');
+  let finalResponse = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${recJson.title}`, { method: 'GET' });
+  let finalJson = await finalResponse.json();
+  if (!finalJson.items) return;
+  let finalJsonBook = finalJson.items[0].volumeInfo;
+  let finalBook = {
+    title: finalJsonBook.title,
+    author: finalJsonBook.authors[0],
+    publisher: finalJsonBook.publisher,
+    year: finalJsonBook.publishedDate,
+    isbn: finalJsonBook.industryIdentifiers.find(el => el.type && el.type.startsWith('ISBN').identifier)
+  };
+
+  console.log(finalBook);
+  setResponse(finalBook);
 }
