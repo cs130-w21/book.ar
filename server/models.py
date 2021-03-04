@@ -20,6 +20,7 @@ class BookRecommendation():
     def make_recommendation(self, books):
         book, score = self._make_recommendation(books)
         print('Recommend book "{}" with score {} among {} books'.format(book, score, len(books)))
+        return book, score
     
     def _make_recommendation(self, books):
         scores = []

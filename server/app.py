@@ -16,7 +16,8 @@ def create_app():
       books = request_json['books']
       model = BookRecommendation()
       model.load_model('saved_models/', 'book_rec_model')
-      return model.make_recommendation(books), 200
+      book, score = model.make_recommendation(books)
+      return book, 200
     else:
       return f'Invalid request body {request_json}'
   
