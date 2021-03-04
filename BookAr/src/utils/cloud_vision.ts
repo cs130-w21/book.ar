@@ -26,5 +26,9 @@ export async function getTextFromImage(base64: string, setResponse) {
   var rawTitles = data['responses'][0]['textAnnotations'].map(function (e) {
     return e['description'];
   });
+  if (setResponse === null) {
+    console.log(rawTitles);
+    return rawTitles;
+  }
   setResponse(rawTitles);
 }

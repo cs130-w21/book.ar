@@ -3,19 +3,27 @@ import {StyleSheet} from 'react-native';
 export default StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'black',
+  },
+  buttonContainer: {
+    flex: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
-  button: {
-    marginVertical: 24,
-    marginHorizontal: 24,
-  },
-  image: {
-    marginVertical: 24,
-    alignItems: 'center',
-  },
-  response: {
-    marginVertical: 16,
-    marginHorizontal: 8,
+  capture: {
+    flex: 0,
+    fontSize: 14,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    padding: 15,
+    paddingHorizontal: 20,
+    alignSelf: 'center',
+    margin: 20,
   },
 });
