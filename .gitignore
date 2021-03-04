@@ -1,6 +1,8 @@
 # Never commit build specific folders
 node_modules/
 dist/
+.ipynb_checkpoints/
+*.pyc
 
 # Never commit individual sessions
 .vscode/
@@ -15,3 +17,6 @@ dist/
 
 # Never commit environment variables
 .env
+
+# Never commit cache
+__pycache__/
