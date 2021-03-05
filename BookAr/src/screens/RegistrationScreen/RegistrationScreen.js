@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import SelectMultiple from 'react-native-select-multiple'
 import {firebase} from '../../utils/firebase';
 import styles from './styles';
 
@@ -9,7 +10,18 @@ export default function RegistrationScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [selectedBooks, setSelectedBooks] = useState('')
 
+  const genres = [
+    {label: "Action and Adventure", value: "1569870888"},
+    {label: "Biographies", value: "0553296981"},
+    {label: "Classics", value: "0446310492"},
+    {label: "Fantasy", value: "0345272579"},
+    {label: "Sci-Fi", value: "0449212602"},
+    {label: "Suspense and Thrillers", value: "0316733741"},
+    {label: "Cookbooks", value: "0553233440"},
+    {label: "Poetry", value: "0394512731"},
+    {label: "I'm a loser who doesn't read", value: "0743222628"},]
   const onFooterLinkPress = () => {
     navigation.navigate('Login');
   };
@@ -29,6 +41,7 @@ export default function RegistrationScreen({navigation}) {
           id: uid,
           email,
           name,
+          selectedBooks
         };
 
         const usersRef = firebase.firestore().collection('users');
@@ -87,6 +100,13 @@ export default function RegistrationScreen({navigation}) {
           value={confirmPassword}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
+        />
+        <Text style={styles.text}>Tell Us What Kinds of Books you Like!</Text>
+        <SelectMultiple
+          style={styles.multiselect}
+          items={genres}
+          selectedItems={selectedBooks}
+          onSelectionsChange={(books) => setSelectedBooks(books)}
         />
         <TouchableOpacity
           style={styles.button}
