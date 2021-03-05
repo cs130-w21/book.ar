@@ -10,48 +10,7 @@ export default function SelectScreen({ navigation, extraData }) {
   const [ response, setResponse ] = useState(null);
   const [ focus, setFocus ] = useState(null);
   const [ snapBtnText, setSnapBtnText ] = useState('SNAP');
-  const [ recBooks, setRecBooks ] = useState([
-    {
-      title: "asdf",
-      author: "asdf",
-      coverUrl: "http://books.google.com/books/content?id=grzEQgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
-    },
-    {
-      title: "asdf",
-      author: "asdf",
-      coverUrl: "http://books.google.com/books/content?id=grzEQgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
-    },
-    {
-      title: "asdf",
-      author: "asdf",
-      coverUrl: "http://books.google.com/books/content?id=grzEQgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
-    },
-    {
-      title: "asdf",
-      author: "asdf",
-      coverUrl: "http://books.google.com/books/content?id=grzEQgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
-    },
-    {
-      title: "asdf",
-      author: "asdf",
-      coverUrl: "http://books.google.com/books/content?id=grzEQgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
-    },
-    {
-      title: "asdf",
-      author: "asdf",
-      coverUrl: "http://books.google.com/books/content?id=grzEQgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
-    },
-    {
-      title: "asdf",
-      author: "asdf",
-      coverUrl: "http://books.google.com/books/content?id=grzEQgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
-    },
-    {
-      title: "asdf",
-      author: "asdf",
-      coverUrl: "http://books.google.com/books/content?id=grzEQgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
-    },
-  ]);
+  const [ recBooks, setRecBooks ] = useState([]);
 
   const cameraRef = useRef(null);
   const pictureTakenRef = useRef(false);
@@ -68,9 +27,8 @@ export default function SelectScreen({ navigation, extraData }) {
       cameraRef.current.resumePreview(); //CALL THIS TO RESUME PREVIEW / BE ABLE TO TAKE ANOTHER
       setSnapBtnText('SNAP');
     }
+    pictureTakenRef.current = !(pictureTakenRef.current);
   };
-
-  useEffect(() => { pictureTakenRef.current = !pictureTakenRef.current }, [ snapBtnText ]);
 
   return (
     <SafeAreaView style={styles.container}>
