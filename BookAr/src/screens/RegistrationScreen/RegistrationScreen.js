@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import SelectMultiple from 'react-native-select-multiple'
 import {firebase} from '../../utils/firebase';
 import styles from './styles';
 
@@ -9,7 +10,18 @@ export default function RegistrationScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [selectedBooks, setSelectedBooks] = useState('')
 
+  const genres = [
+    {label: 'Action and Adventure', value: 'The Three Musketeers'},
+    {label: 'Biographies', value: 'Autobiography of a Fat Bride : True Tales of a Pretend Adulthood'},
+    {label: 'Classics', value: 'To Kill a Mockingbird'},
+    {label: 'Fantasy', value: 'The Lord of the Rings'},
+    {label: 'Sci-Fi', value: 'The Handmaid\'s Tale'},
+    {label: 'Suspense and Thrillers', value: ''},
+    {label: 'Cookbooks', value: 'French Chef Cookbook'},
+    {label: 'Poetry', value: 'The Heart of a Woman'},
+    {label: 'I\'m a loser who doesn\'t read', value: 'The Best American Erotica 2004 (Best American Erotica)'},]
   const onFooterLinkPress = () => {
     navigation.navigate('Login');
   };
@@ -29,6 +41,7 @@ export default function RegistrationScreen({navigation}) {
           id: uid,
           email,
           name,
+          selectedBooks
         };
 
         const usersRef = firebase.firestore().collection('users');
@@ -87,6 +100,13 @@ export default function RegistrationScreen({navigation}) {
           value={confirmPassword}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
+        />
+        <Text style={styles.text}>Tell Us What Kinds of Books you Like!</Text>
+        <SelectMultiple
+          style={styles.multiselect}
+          items={genres}
+          selectedItems={selectedBooks}
+          onSelectionsChange={(books) => setSelectedBooks(books)}
         />
         <TouchableOpacity
           style={styles.button}
