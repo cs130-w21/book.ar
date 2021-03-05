@@ -13,15 +13,15 @@ export default function RegistrationScreen({navigation}) {
   const [selectedBooks, setSelectedBooks] = useState('')
 
   const genres = [
-    {label: 'Action and Adventure', value: 'The Three Musketeers'},
-    {label: 'Biographies', value: 'Autobiography of a Fat Bride : True Tales of a Pretend Adulthood'},
-    {label: 'Classics', value: 'To Kill a Mockingbird'},
-    {label: 'Fantasy', value: 'The Lord of the Rings'},
-    {label: 'Sci-Fi', value: 'The Handmaid\'s Tale'},
-    {label: 'Suspense and Thrillers', value: ''},
-    {label: 'Cookbooks', value: 'French Chef Cookbook'},
-    {label: 'Poetry', value: 'The Heart of a Woman'},
-    {label: 'I\'m a loser who doesn\'t read', value: 'The Best American Erotica 2004 (Best American Erotica)'},]
+    {label: "Action and Adventure", value: "1569870888"},
+    {label: "Biographies", value: "0553296981"},
+    {label: "Classics", value: "0446310492"},
+    {label: "Fantasy", value: "0345272579"},
+    {label: "Sci-Fi", value: "0449212602"},
+    {label: "Suspense and Thrillers", value: "0316733741"},
+    {label: "Cookbooks", value: "0553233440"},
+    {label: "Poetry", value: "0394512731"},
+    {label: "I'm a loser who doesn't read", value: "0743222628"},]
   const onFooterLinkPress = () => {
     navigation.navigate('Login');
   };
