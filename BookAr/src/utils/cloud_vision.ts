@@ -19,7 +19,7 @@ interface RecommendedBook {
   imageUri: string;
 }
 
-export async function getRecommendedBooks(base64: string, setResponse) {
+export async function getRecommendedBooks(base64: string, setRecBooks) {
   const body = JSON.stringify({
     requests: [
       {
@@ -86,6 +86,7 @@ export async function getRecommendedBooks(base64: string, setResponse) {
   let finalBook = {
     title: finalJsonBook.title,
     author: finalJsonBook.authors[0],
+    description: finalJsonBook.description,
     publisher: finalJsonBook.publisher,
     year: finalJsonBook.publishedDate,
     isbn: finalJsonBook.industryIdentifiers.find(el => el.type && el.type.startsWith('ISBN').identifier),
@@ -93,5 +94,5 @@ export async function getRecommendedBooks(base64: string, setResponse) {
   };
 
   console.log(finalBook);
-  setResponse(finalBook);
+  setRecBooks([finalBook]);
 }

@@ -1,14 +1,16 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {Text, View, TouchableOpacity, SafeAreaView} from 'react-native';
+import {FlatList, Text, View, TouchableOpacity, SafeAreaView} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import styles from './styles';
 import * as ImagePicker from '../../utils/image_picker.ts';
 import * as CloudVision from '../../utils/cloud_vision.ts';
+import BookListItem from './BookListItem.js';
 
 export default function SelectScreen({ navigation, extraData }) {
   const [ response, setResponse ] = useState(null);
   const [ focus, setFocus ] = useState({x: 0.5, y: 0.5});
   const [ snapBtnText, setSnapBtnText ] = useState('SNAP');
+  const [ recBooks, setRecBooks ] = useState([]);
 
   // const cameraRef = useRef(null);
   const pictureTakenRef = useRef(false);
@@ -19,14 +21,12 @@ export default function SelectScreen({ navigation, extraData }) {
       const data = await camera.takePictureAsync(options);
       setSnapBtnText('AGAIN');
       setResponse('Loading...');
-      CloudVision.getRecommendedBooks(data.base64, setResponse);
+      CloudVision.getRecommendedBooks(data.base64, setRecBooks);
     } else if(camera){
       camera.resumePreview(); //CALL THIS TO RESUME PREVIEW / BE ABLE TO TAKE ANOTHER
       setSnapBtnText('SNAP');
     }
   };
-
-  useEffect(() => { pictureTakenRef.current = !pictureTakenRef.current}, [ snapBtnText ]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -63,7 +63,7 @@ export default function SelectScreen({ navigation, extraData }) {
                       quality: 1,
                     },
                     (data) => {
-                      CloudVision.getRecommendedBooks(data.base64, setResponse);
+                      CloudVision.getRecommendedBooks(data.base64, setRecBooks);
                     },
                   )
                 }
@@ -74,9 +74,11 @@ export default function SelectScreen({ navigation, extraData }) {
           );
         }}
       </RNCamera>
-      <View style={styles.response}>
-        <Text>Response: {JSON.stringify(response, null, 2)}</Text>
-      </View>
+      <FlatList
+        style={styles.response}
+        data={recBooks}
+        renderItem={({item}) => (<BookListItem key={item.title} book={item} />)}
+      />
     </SafeAreaView>
   );
 }
