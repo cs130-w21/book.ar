@@ -76,6 +76,7 @@ export async function getRecommendedBooks(base64: string, setResponse) {
     body: JSON.stringify({ books: titles, prefs: titles })
   });
   let recJson = await recResponse.json();
+  console.log(recJson);
 
   console.log('getting book data');
   let finalResponse = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${recJson.title}`, { method: 'GET' });
@@ -87,7 +88,8 @@ export async function getRecommendedBooks(base64: string, setResponse) {
     author: finalJsonBook.authors[0],
     publisher: finalJsonBook.publisher,
     year: finalJsonBook.publishedDate,
-    isbn: finalJsonBook.industryIdentifiers.find(el => el.type && el.type.startsWith('ISBN').identifier)
+    isbn: finalJsonBook.industryIdentifiers.find(el => el.type && el.type.startsWith('ISBN').identifier),
+    coverUrl: finalJsonBook.imageLinks?.thumbnail
   };
 
   console.log(finalBook);

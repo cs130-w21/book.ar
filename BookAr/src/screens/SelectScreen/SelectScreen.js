@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {Text, View, TouchableOpacity, SafeAreaView} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import styles from './styles';
@@ -8,20 +8,25 @@ import * as CloudVision from '../../utils/cloud_vision.ts';
 export default function SelectScreen({ navigation, extraData }) {
   const [ response, setResponse ] = useState(null);
   const [ focus, setFocus ] = useState(null);
+  const [ snapBtnText, setSnapBtnText ] = useState('SNAP');
 
   const cameraRef = useRef(null);
+  const pictureTakenRef = useRef(false);
 
   const takePicture = async () => {
-    if (cameraRef.current) {
+    if (cameraRef.current && pictureTakenRef.current == false) {
       const options = {base64: true, pauseAfterCapture: true}; //PAUSE ALLOWS FOR STATIC IMAGE ON SCREEN
       const data = await cameraRef.current.takePictureAsync(options);
-      setResponse("Loading...");
+      setSnapBtnText('AGAIN');
+      setResponse('Loading...');
       CloudVision.getRecommendedBooks(data.base64, setResponse);
-      setTimeout(() => {
-        cameraRef.current.resumePreview(); //CALL THIS TO RESUME PREVIEW / BE ABLE TO TAKE ANOTHER
-      }, 1000);
+    } else {
+      cameraRef.current.resumePreview(); //CALL THIS TO RESUME PREVIEW / BE ABLE TO TAKE ANOTHER
+      setSnapBtnText('SNAP');
     }
   };
+
+  useEffect(() => { pictureTakenRef.current = !pictureTakenRef.current }, [ snapBtnText ]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,7 +52,7 @@ export default function SelectScreen({ navigation, extraData }) {
         <TouchableOpacity
           onPress={takePicture}
           style={styles.capture}>
-          <Text> SNAP </Text>
+          <Text>{snapBtnText}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
