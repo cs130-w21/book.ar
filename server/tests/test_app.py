@@ -44,7 +44,7 @@ def test_index(client) -> None:
 
 def test_no_input(client) -> None:
   rv = client.post('/recommend')
-  assert rv.data = b'No request body, please populate with books and prefs
+  assert rv.data = b'No request body, please populate with books and prefs'
 
 def test_no_data(client) -> None:
   rv = client.post(
