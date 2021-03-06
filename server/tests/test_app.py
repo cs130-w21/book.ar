@@ -48,21 +48,21 @@ def test_no_input(client) -> None:
 
 def test_no_data(client) -> None:
   rv = client.post(
-    '/recommend'
+    '/recommend',
     data=json.dumps({}),
     content_type='application/json')
   assert rv.data == b'\"books\" property not in request body'
 
 def test_no_pref(client) -> None:
   rv = client.post(
-    '/recommend'
+    '/recommend',
     data=json.dumps({'books': test_books}),
     content_type='application/json')
   assert rv.data == b'\"pref\" property not in request body'
 
 def test_backend(client) -> None:
   rv = client.post(
-    '/recommend'
+    '/recommend',
     data=json.dumps({'books': test_books, 'prefs': user_preferred_books}),
     content_type='application/json')
   assert rv.data == b'\"pref\" property not in request body'
