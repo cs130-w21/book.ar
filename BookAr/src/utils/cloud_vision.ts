@@ -1,26 +1,5 @@
 import {firebase} from './firebase';
 
-interface GoogleBooksResponse {
-  items: {
-    volumeInfo: {
-      title: string
-    }
-  }[];
-}
-
-interface RecommendRequest {
-  books: string[][];
-}
-
-interface RecommendedBook {
-  ISBN: string;
-  title: string;
-  author: string;
-  year: number;
-  publisher: string;
-  imageUri: string;
-}
-
 export async function getRecommendedBooks(base64: string, setRecBooks, setLoading) {
   setLoading({ isLoading: true, msg: "Looking for books in image..." });
   console.log('fetching vision data');

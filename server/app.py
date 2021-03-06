@@ -39,7 +39,8 @@ def create_app():
     model = TFIDFBookRec(threshold=0.2)
     model.load_model('saved_models/', 'tfidf_model')
     model.set_user_preference(prefs)
-    return model.make_recommendation(books, verbose=True).__dict__, 200
+    recs = model.make_recommendation(books, verbose=True)
+    return json.dumps(list(map(lambda book: book.__dict__, recs))), 200
 
   return app
 
