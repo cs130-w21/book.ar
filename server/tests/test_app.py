@@ -41,7 +41,7 @@ user_preferred_book3 = {
   'author': 'Mitch Albom',
   'year': 2003,
   'publisher': 'Hyperion',
-                         'http://images.amazon.com/images/P/0786868716.01.LZZZZZZZ.jpg']
+}  
 
 user_preferred_books = [user_preferred_book1, user_preferred_book2, user_preferred_book3]
 
