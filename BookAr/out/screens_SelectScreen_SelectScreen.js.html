@@ -1,8 +1,36 @@
-import React, {useEffect, useState, useRef} from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/SelectScreen/SelectScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/SelectScreen/SelectScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useEffect, useState, useRef} from 'react';
 import {ActivityIndicator, FlatList, Text, View, TouchableOpacity, SafeAreaView} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import styles from './styles';
-import * as ImagePicker from '../../utils/image_picker.js';
+import * as ImagePicker from '../../utils/image_picker.ts';
 import * as CloudVision from '../../utils/cloud_vision.js';
 import BookListItem from './BookListItem.js';
 
@@ -34,7 +62,7 @@ export default function SelectScreen({ navigation, extraData }) {
    */
   const takePicture = async (camera) => {
     pictureTakenRef.current = !(pictureTakenRef.current);
-    if (camera && pictureTakenRef.current == false) {
+    if (camera &amp;&amp; pictureTakenRef.current == false) {
       const options = {base64: true, quality: 1, pauseAfterCapture: true}; //PAUSE ALLOWS FOR STATIC IMAGE ON SCREEN
       const data = await camera.takePictureAsync(options);
       setSnapBtnText('AGAIN');
@@ -62,35 +90,35 @@ export default function SelectScreen({ navigation, extraData }) {
   const renderBottom = () => {
     if (loading.isLoading) {
       return(
-        <View style={[styles.response, { justifyContent: 'center' }]}>
-          <ActivityIndicator style={styles.loader} color="#ff0000" size="large" />
-          <Text style={styles.loadingText}>{loading.msg}</Text>
-        </View>
+        &lt;View style={[styles.response, { justifyContent: 'center' }]}>
+          &lt;ActivityIndicator style={styles.loader} color="#ff0000" size="large" />
+          &lt;Text style={styles.loadingText}>{loading.msg}&lt;/Text>
+        &lt;/View>
       );
     } else if (recBooks === null) {
       return (
-        <View style={[styles.response, { justifyContent: 'center' }]}>
-          <Text style={[ styles.loadingText, { paddingTop: 0 }]}>Take a picture of some books!</Text>
-        </View>
+        &lt;View style={[styles.response, { justifyContent: 'center' }]}>
+          &lt;Text style={[ styles.loadingText, { paddingTop: 0 }]}>Take a picture of some books!&lt;/Text>
+        &lt;/View>
       );
     } else if (recBooks.length == 0) {
       return (
-        <View style={[styles.response, { justifyContent: 'center' }]}>
-          <Text style={[styles.loadingText, { paddingTop: 0 }]}>No good books detected.</Text>
-        </View>
+        &lt;View style={[styles.response, { justifyContent: 'center' }]}>
+          &lt;Text style={[styles.loadingText, { paddingTop: 0 }]}>No good books detected.&lt;/Text>
+        &lt;/View>
       );
     } else {
-      return (<FlatList
+      return (&lt;FlatList
         style={styles.response}
         data={recBooks}
-        renderItem={({item}) => (<BookListItem id={item.title} book={item} />)}
+        renderItem={({item}) => (&lt;BookListItem id={item.title} book={item} />)}
       />)
     }
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <RNCamera
+    &lt;SafeAreaView style={styles.container}>
+      &lt;RNCamera
         // ref={cameraRef}
         style={styles.preview}
         captureAudio={false}
@@ -108,13 +136,13 @@ export default function SelectScreen({ navigation, extraData }) {
           buttonNegative: 'Cancel',
         }}>
         {({camera, status}) => {
-          if (status !== 'READY' || !camera ) return <></>;
+          if (status !== 'READY' || !camera ) return &lt;>&lt;/>;
           return (
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity onPress={() => takePicture(camera)} style={styles.capture}>
-                <Text>{snapBtnText}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+            &lt;View style={styles.buttonContainer}>
+              &lt;TouchableOpacity onPress={() => takePicture(camera)} style={styles.capture}>
+                &lt;Text>{snapBtnText}&lt;/Text>
+              &lt;/TouchableOpacity>
+              &lt;TouchableOpacity
                 onPress={() =>
                   ImagePicker.launchImageLibrary(
                     {
@@ -123,18 +151,41 @@ export default function SelectScreen({ navigation, extraData }) {
                       quality: 1,
                     },
                     (data) => {
-                      CloudVision.getRecommendedBooks(data.base64, setRecBooks, setLoading);
+                      CloudVision.getRecommendedBooks(data.base64, setRecBooks);
                     },
                   )
                 }
                 style={styles.capture}>
-                <Text> CHOOSE </Text>
-              </TouchableOpacity>
-            </View>
+                &lt;Text> CHOOSE &lt;/Text>
+              &lt;/TouchableOpacity>
+            &lt;/View>
           );
         }}
-      </RNCamera>
+      &lt;/RNCamera>
       {renderBottom()}
-    </SafeAreaView>
+    &lt;/SafeAreaView>
   );
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="SelectScreen.html">SelectScreen</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getRecommendedBooks">getRecommendedBooks</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Mar 06 2021 18:26:14 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
