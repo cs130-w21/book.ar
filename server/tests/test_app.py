@@ -44,25 +44,25 @@ def test_index(client) -> None:
 
 def test_no_input(client) -> None:
   rv = client.post('/recommend')
-  assert rv.data = b'No request body, please populate with books and prefs'
+  assert rv.data == b'No request body, please populate with books and prefs'
 
 def test_no_data(client) -> None:
   rv = client.post(
     '/recommend'
     data=json.dumps({}),
     content_type='application/json')
-  assert rv.data = b'\"books\" property not in request body'
+  assert rv.data == b'\"books\" property not in request body'
 
 def test_no_pref(client) -> None:
   rv = client.post(
     '/recommend'
     data=json.dumps({'books': test_books}),
     content_type='application/json')
-  assert rv.data = b'\"pref\" property not in request body'
+  assert rv.data == b'\"pref\" property not in request body'
 
 def test_backend(client) -> None:
   rv = client.post(
     '/recommend'
     data=json.dumps({'books': test_books, 'prefs': user_preferred_books}),
     content_type='application/json')
-  assert rv.data = b'\"pref\" property not in request body'
+  assert rv.data == b'\"pref\" property not in request body'
