@@ -1,3 +1,5 @@
+import json
+
 test_book1 = ['059035342X',
              "Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))",
              'J. K. Rowling',
