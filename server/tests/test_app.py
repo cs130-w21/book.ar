@@ -67,4 +67,4 @@ def test_backend(client) -> None:
     '/recommend',
     data=json.dumps({'books': test_books, 'prefs': user_preferred_books}),
     content_type='application/json')
-  assert rv.data == b'\"pref\" property not in request body'
+  assert rv.data == b'book'
