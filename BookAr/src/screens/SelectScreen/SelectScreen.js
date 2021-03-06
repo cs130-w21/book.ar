@@ -1,74 +1,84 @@
-import React, {PureComponent,  useState } from 'react';
-import {Text, View, TouchableOpacity, SafeAreaView} from 'react-native';
+import React, {useEffect, useState, useRef} from 'react';
+import {FlatList, Text, View, TouchableOpacity, SafeAreaView} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import styles from './styles';
 import * as ImagePicker from '../../utils/image_picker.ts';
 import * as CloudVision from '../../utils/cloud_vision.ts';
+import BookListItem from './BookListItem.js';
 
-export default class SelectScreen extends PureComponent {
-  constructor(props) {
-    super(props);
-    // this.state = {image: null, focus: {x: 0.5, y: 0.5}};
-  }
+export default function SelectScreen({ navigation, extraData }) {
+  const [ response, setResponse ] = useState(null);
+  const [ focus, setFocus ] = useState({x: 0.5, y: 0.5});
+  const [ snapBtnText, setSnapBtnText ] = useState('SNAP');
+  const [ recBooks, setRecBooks ] = useState([]);
 
-  render() {
-    return (
-      <SafeAreaView style={styles.container}>
-        <RNCamera
-          ref={(ref) => {
-            this.camera = ref;
-          }}
-          style={styles.preview}
-          captureAudio={false}
-          // ratio={'3:4'}
-          // autoFocusPointOfInterest={this.state.focus}
-          defaultVideoQuality={RNCamera.Constants.Vid}
-          type={RNCamera.Constants.Type.back}
-          flashMode={RNCamera.Constants.FlashMode.auto}
-          // onTap={(event) => this.setState({focus: {x: event.x, y: event.y}})}
-          onDoubleTap={this.takePicture.bind(this)}
-          androidCameraPermissionOptions={{
-            title: 'Permission to use camera',
-            message: 'We need your permission to use your camera',
-            buttonPositive: 'Ok',
-            buttonNegative: 'Cancel',
-          }}
-        />
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            onPress={this.takePicture.bind(this)}
-            style={styles.capture}>
-            <Text> SNAP </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() =>
-              ImagePicker.launchImageLibrary(
-                {
-                  mediaType: 'photo',
-                  includeBase64: true,
-                  quality: 1,
-                },
-                async (data) => {
-                  var words = await CloudVision.getTextFromImage(data.base64, null);
-                  console.log(words);
-                },
-              )
-            }
-            style={styles.capture}>
-            <Text> CHOOSE </Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    );
-  }
+  // const cameraRef = useRef(null);
+  const pictureTakenRef = useRef(false);
 
-  takePicture = async () => {
-    if (this.camera) {
-      const options = {base64: true, pauseAfterCapture: true}; //PAUSE ALLOWS FOR STATIC IMAGE ON SCREEN
-      const data = await this.camera.takePictureAsync(options);
-      const words = await CloudVision.getTextFromImage(data.base64, null);
-      console.log(words);
-      this.camera.resumePreview(); //CALL THIS TO RESUME PREVIEW / BE ABLE TO TAKE ANOTHER
+  const takePicture = async (camera) => {
+    if (camera && pictureTakenRef.current == false) {
+      const options = {base64: true, quality: 1, pauseAfterCapture: true}; //PAUSE ALLOWS FOR STATIC IMAGE ON SCREEN
+      const data = await camera.takePictureAsync(options);
+      setSnapBtnText('AGAIN');
+      setResponse('Loading...');
+      CloudVision.getRecommendedBooks(data.base64, setRecBooks);
+    } else if(camera){
+      camera.resumePreview(); //CALL THIS TO RESUME PREVIEW / BE ABLE TO TAKE ANOTHER
+      setSnapBtnText('SNAP');
     }
   };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <RNCamera
+        // ref={cameraRef}
+        style={styles.preview}
+        captureAudio={false}
+        // ratio={'3:4'}
+        autoFocusPointOfInterest={focus}
+        defaultVideoQuality={RNCamera.Constants.Vid}
+        type={RNCamera.Constants.Type.back}
+        flashMode={RNCamera.Constants.FlashMode.off}
+        onTap={(event) => setFocus({x: event.x, y: event.y})}
+        // onDoubleTap={() => takePicture(camera)}
+        androidCameraPermissionOptions={{
+          title: 'Permission to use camera',
+          message: 'We need your permission to use your camera',
+          buttonPositive: 'Ok',
+          buttonNegative: 'Cancel',
+        }}>
+        {({camera, status}) => {
+          if (status !== 'READY' || !camera ) return <></>;
+          return (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={() => takePicture(camera)} style={styles.capture}>
+                <Text>{snapBtnText}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  ImagePicker.launchImageLibrary(
+                    {
+                      mediaType: 'photo',
+                      includeBase64: true,
+                      quality: 1,
+                    },
+                    (data) => {
+                      CloudVision.getRecommendedBooks(data.base64, setRecBooks);
+                    },
+                  )
+                }
+                style={styles.capture}>
+                <Text> CHOOSE </Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }}
+      </RNCamera>
+      <FlatList
+        style={styles.response}
+        data={recBooks}
+        renderItem={({item}) => (<BookListItem key={item.title} book={item} />)}
+      />
+    </SafeAreaView>
+  );
 }
