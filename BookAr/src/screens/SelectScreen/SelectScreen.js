@@ -16,6 +16,7 @@ export default function SelectScreen({ navigation, extraData }) {
   const pictureTakenRef = useRef(false);
 
   const takePicture = async (camera) => {
+    pictureTakenRef.current = !(pictureTakenRef.current);
     if (camera && pictureTakenRef.current == false) {
       const options = {base64: true, quality: 1, pauseAfterCapture: true}; //PAUSE ALLOWS FOR STATIC IMAGE ON SCREEN
       const data = await camera.takePictureAsync(options);
@@ -77,7 +78,7 @@ export default function SelectScreen({ navigation, extraData }) {
       <FlatList
         style={styles.response}
         data={recBooks}
-        renderItem={({item}) => (<BookListItem key={item.title} book={item} />)}
+        renderItem={({item}) => (<BookListItem id={item.title} book={item} />)}
       />
     </SafeAreaView>
   );

@@ -1,3 +1,5 @@
+import {firebase} from './firebase';
+
 interface GoogleBooksResponse {
   items: {
     volumeInfo: {
@@ -68,31 +70,45 @@ export async function getRecommendedBooks(base64: string, setRecBooks) {
   console.log(titles);
 
   // Get recommendations from server
-  const recResponse = await fetch('http://129.146.110.3/recommend', {
+  const uid = firebase.auth().currentUser.uid;
+  const usersRef = firebase.firestore().collection('users');
+  const doc = await usersRef.doc(uid).get();
+  if (!doc.exists) {
+    console.log('User does not exist, something\'s wrong');
+    return;
+  }
+  const prefs = doc.data().prefs;
+  console.log('user prefs', prefs);
+  const recResponse = await fetch('http://192.168.0.11:8080/recommend', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ books: titles, prefs: titles })
+    body: JSON.stringify({ books: titles, prefs: prefs })
   });
   let recJson = await recResponse.json();
   console.log(recJson);
 
+  let finalBooks = []
   console.log('getting book data');
-  let finalResponse = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${recJson.title}`, { method: 'GET' });
-  let finalJson = await finalResponse.json();
-  if (!finalJson.items) return;
-  let finalJsonBook = finalJson.items[0].volumeInfo;
-  let finalBook = {
-    title: finalJsonBook.title,
-    author: finalJsonBook.authors[0],
-    description: finalJsonBook.description,
-    publisher: finalJsonBook.publisher,
-    year: finalJsonBook.publishedDate,
-    isbn: finalJsonBook.industryIdentifiers.find(el => el.type && el.type.startsWith('ISBN').identifier),
-    coverUrl: finalJsonBook.imageLinks?.thumbnail
-  };
+  for (let recBook of recJson) {
+    let finalResponse = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${recBook.title}`, { method: 'GET' });
+    let finalJson = await finalResponse.json();
+    if (!finalJson.items) return;
+    let finalJsonBook = finalJson.items[0].volumeInfo;
+    let finalBook = {
+      title: finalJsonBook.title,
+      author: finalJsonBook.authors[0],
+      description: finalJsonBook.description,
+      publisher: finalJsonBook.publisher,
+      year: finalJsonBook.publishedDate,
+      isbn: finalJsonBook.industryIdentifiers.find(el => el.type && el.type.startsWith('ISBN').identifier),
+      coverUrl: finalJsonBook.imageLinks?.thumbnail
+    };
 
-  console.log(finalBook);
-  setRecBooks([finalBook]);
+    console.log(finalBook);
+    finalBooks.push(finalBook);
+  }
+
+  setRecBooks(finalBooks);
 }

@@ -1,3 +1,4 @@
+import json
 from flask import Flask, request
 from models import TFIDFBookRec
 from utils import Book
@@ -33,7 +34,8 @@ def create_app():
       model = TFIDFBookRec()
       model.load_model('saved_models/', 'tfidf_model')
       model.set_user_preference(prefs)
-      return model.make_recommendation(books, verbose=True).__dict__, 200
+      recs = model.make_recommendation(books, verbose=True)
+      return json.dumps(list(map(lambda book: book.__dict__, recs))), 200
     else:
       return f'Invalid request body {request_json}', 400
 
@@ -41,4 +43,4 @@ def create_app():
 
 if __name__ == "__main__":
   app = create_app()
-  app.run(host='0.0.0.0')
+  app.run(debug=True, host='192.168.0.1')

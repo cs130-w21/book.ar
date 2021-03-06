@@ -62,15 +62,15 @@ class PopularityBookRec(BookRecInterface):
 
 
 class TFIDFBookRec(BookRecInterface):
-    def __init__(self):
+    def __init__(self, threshold=0.01):
         self.score_weights = np.array([0.5, 0.4, 0.1, 0.0])
         self.tfidf = TfidfVectorizer(analyzer='word', ngram_range=(1, 2), min_df=1, stop_words='english')
         self.pref_tfidf = None
         self.pref_authors = None
         self.pref_publishers = None
         self.pref_years = None
-        
         self.book_ratings = None
+        self.threshold = threshold
     
     def train_ratings(self, books, ratings):
         ratings_avg = pd.DataFrame(ratings.groupby(['ISBN'])['bookRating'].mean()).rename(columns={'bookRating':'avgRating'})
@@ -139,17 +139,21 @@ class TFIDFBookRec(BookRecInterface):
         return self.score_weights.dot(score_matrix).max()
 
     def make_recommendation(self, books, verbose=True):
-        book, score = self._make_recommendation(books)
-        if verbose:
-            print('Recommend book "{}" with score {} among {} books'.format(book.title, score, len(books)))
-        return book
+        books = self._make_recommendation(books, verbose)
+        return books
     
-    def _make_recommendation(self, books):
+    def _make_recommendation(self, books, verbose):
         scores = []
         for book in books:
             scores += [self.compute_book_score(book)]
-        max_idx = np.array(scores).argmax()
-        return books[max_idx], scores[max_idx]
+        rec_books = []
+        for i in range(0, len(books)):
+            if verbose:
+                print(f"Book \"{books[i].title}\": {scores[i]}")
+            if scores[i] > self.threshold:
+                rec_books.append(books[i])
+
+        return rec_books
     
     def load_model(self, input_path='saved_model/', input_model_name='book_rec_model'):
         with open('{}{}.pth'.format(input_path, input_model_name), "rb") as fp:   # Unpickling
