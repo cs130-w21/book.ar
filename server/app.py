@@ -14,28 +14,33 @@ def create_app():
   @app.route('/recommend', methods=['GET', 'POST'])
   def make_recommendation():
     request_json = request.get_json()
-    if request_json and 'books' in request_json and 'prefs' in request_json:
-      books_json = request_json['books']
-      prefs_json = request_json['prefs']
-      books = list(map(lambda book: Book(book.get('isbn'),
-                                         book.get('title'),
-                                         book.get('author'),
-                                         book.get('year'),
-                                         book.get('publisher')),
-                       books_json))
-      prefs = list(map(lambda book: Book(book.get('isbn'),
-                                         book.get('title'),
-                                         book.get('author'),
-                                         book.get('year'),
-                                         book.get('publisher')),
-                       prefs_json))
+    if not request_json:
+      return f'No request body, please populate with books and prefs', 400
+    if 'books' not in request_json:
+      return f'\"books\" property not in request body', 400
+    if 'books' not in request_json:
+      return f'\"pref\" property not in request body', 400
+    books_json = request_json['books']
+    prefs_json = request_json['prefs']
+    books = list(map(lambda book: Book(book.get('isbn'),
+                                        book.get('title'),
+                                        book.get('author'),
+                                        book.get('year'),
+                                        book.get('publisher')),
+                      books_json))
+    prefs = list(map(lambda book: Book(book.get('isbn'),
+                                        book.get('title'),
+                                        book.get('author'),
+                                        book.get('year'),
+                                        book.get('publisher')),
+                      prefs_json))
 
-      model = TFIDFBookRec()
-      model.load_model('saved_models/', 'tfidf_model')
-      model.set_user_preference(prefs)
-      return model.make_recommendation(books, verbose=True).__dict__, 200
-    else:
-      return f'Invalid request body {request_json}', 400
+    model = TFIDFBookRec()
+    model.load_model('saved_models/', 'tfidf_model')
+    model.set_user_preference(prefs)
+    return model.make_recommendation(books, verbose=True).__dict__, 200
+
+      
 
   return app
 
