@@ -132,9 +132,9 @@ class TFIDFBookRec(BookRecInterface):
         new_corpus = self._get_corpus([new_book])
         new_tfidf = self.fit_new_corpus(new_corpus)
         tfidf_score = cosine_similarity(new_tfidf, self.pref_tfidf).reshape(1, -1)
-        author_score = np.array([new_book.author == author for author in self.pref_authors]).reshape(1, -1)
-        publisher_score = np.array([new_book.publisher == publisher for publisher in self.pref_publishers]).reshape(1, -1)
-        year_score = np.array([abs(new_book.year - year) < 3 if new_book.year is not None else 0 for year in self.pref_years]).reshape(1, -1)
+        author_score = np.array([new_book.author == author if author is not None else False for author in self.pref_authors]).reshape(1, -1)
+        publisher_score = np.array([new_book.publisher == publisher if publisher is not None else False for publisher in self.pref_publishers]).reshape(1, -1)
+        year_score = np.array([abs(new_book.year - year) < 3 if new_book.year is not None and year is not None else False for year in self.pref_years]).reshape(1, -1)
         score_matrix = np.concatenate([tfidf_score, author_score, publisher_score, year_score]).astype(float)
         return self.score_weights.dot(score_matrix).max()
 

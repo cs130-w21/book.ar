@@ -31,7 +31,7 @@ def create_app():
                                          book.get('publisher')),
                        prefs_json))
 
-      model = TFIDFBookRec()
+      model = TFIDFBookRec(threshold=0.2)
       model.load_model('saved_models/', 'tfidf_model')
       model.set_user_preference(prefs)
       recs = model.make_recommendation(books, verbose=True)

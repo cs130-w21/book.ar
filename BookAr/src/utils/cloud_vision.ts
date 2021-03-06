@@ -53,7 +53,7 @@ export async function getRecommendedBooks(base64: string, setRecBooks) {
       let words = p['words'];
       return words.map(w => w['symbols'].map(s => s['text']).join('')).join(' ');
     });
-    return para_words;
+    return para_words.flat();
   });
 
   console.log(rawTitles);
@@ -64,7 +64,12 @@ export async function getRecommendedBooks(base64: string, setRecBooks) {
     let response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${title[0]}`, { method: 'GET' });
     let json = await response.json();
     if (!json.items) continue;
-    titles.push({ title: json.items[0].volumeInfo.title });
+    titles.push({
+      title: json.items[0].volumeInfo.title,
+      author: json.items[0].volumeInfo.authors?.length > 0 ? json.items[0].volumeInfo.authors[0] : null,
+      publisher: json.items[0].volumeInfo.publisher,
+      year: Number.parseInt(json.items[0].volumeInfo.publishedDate)
+    });
   }
 
   console.log(titles);
