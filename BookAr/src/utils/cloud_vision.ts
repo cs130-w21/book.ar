@@ -21,7 +21,9 @@ interface RecommendedBook {
   imageUri: string;
 }
 
-export async function getRecommendedBooks(base64: string, setRecBooks) {
+export async function getRecommendedBooks(base64: string, setRecBooks, setLoading) {
+  setLoading({ isLoading: true, msg: "Looking for books in image..." });
+  console.log('fetching vision data');
   const body = JSON.stringify({
     requests: [
       {
@@ -44,7 +46,6 @@ export async function getRecommendedBooks(base64: string, setRecBooks) {
       body: body,
     },
   );
-  console.log('fetching vision data');
 
   const data = await response.json(); // Holds bounding box and language information as well
   const rawTitles = data['responses'][0]['fullTextAnnotation']['pages'][0]['blocks'].map(b => {
@@ -58,6 +59,7 @@ export async function getRecommendedBooks(base64: string, setRecBooks) {
 
   console.log(rawTitles);
 
+  setLoading({ isLoading: true, msg: "Processing titles..." });
   console.log('fetching titles');
   let titles = [];
   for (const title of rawTitles) {
@@ -74,6 +76,7 @@ export async function getRecommendedBooks(base64: string, setRecBooks) {
 
   console.log(titles);
 
+  setLoading({ isLoading: true, msg: "Choosing books to recommend..." });
   // Get recommendations from server
   const uid = firebase.auth().currentUser.uid;
   const usersRef = firebase.firestore().collection('users');
@@ -115,5 +118,6 @@ export async function getRecommendedBooks(base64: string, setRecBooks) {
     finalBooks.push(finalBook);
   }
 
+  setLoading({ isLoading: false, msg: "" });
   setRecBooks(finalBooks);
 }

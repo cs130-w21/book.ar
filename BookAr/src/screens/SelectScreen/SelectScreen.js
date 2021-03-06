@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {FlatList, Text, View, TouchableOpacity, SafeAreaView} from 'react-native';
+import {ActivityIndicator, FlatList, Text, View, TouchableOpacity, SafeAreaView} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import styles from './styles';
 import * as ImagePicker from '../../utils/image_picker.ts';
@@ -7,10 +7,10 @@ import * as CloudVision from '../../utils/cloud_vision.ts';
 import BookListItem from './BookListItem.js';
 
 export default function SelectScreen({ navigation, extraData }) {
-  const [ response, setResponse ] = useState(null);
   const [ focus, setFocus ] = useState({x: 0.5, y: 0.5});
   const [ snapBtnText, setSnapBtnText ] = useState('SNAP');
-  const [ recBooks, setRecBooks ] = useState([]);
+  const [ recBooks, setRecBooks ] = useState(null);
+  const [ loading, setLoading ] = useState({ isLoading: false, msg: "loading stuff" });
 
   // const cameraRef = useRef(null);
   const pictureTakenRef = useRef(false);
@@ -21,13 +21,47 @@ export default function SelectScreen({ navigation, extraData }) {
       const options = {base64: true, quality: 1, pauseAfterCapture: true}; //PAUSE ALLOWS FOR STATIC IMAGE ON SCREEN
       const data = await camera.takePictureAsync(options);
       setSnapBtnText('AGAIN');
-      setResponse('Loading...');
-      CloudVision.getRecommendedBooks(data.base64, setRecBooks);
+      CloudVision.getRecommendedBooks(data.base64, setRecBooks, setLoading)
+        .catch(ex => {
+          console.error(ex);
+          setLoading({ isLoading: false, msg: "" });
+          setRecBooks([]);
+        });
     } else if(camera){
       camera.resumePreview(); //CALL THIS TO RESUME PREVIEW / BE ABLE TO TAKE ANOTHER
       setSnapBtnText('SNAP');
+      setRecBooks(null);
     }
   };
+
+  const renderBottom = () => {
+    if (loading.isLoading) {
+      return(
+        <View style={[styles.response, { justifyContent: 'center' }]}>
+          <ActivityIndicator style={styles.loader} color="#ff0000" size="large" />
+          <Text style={styles.loadingText}>{loading.msg}</Text>
+        </View>
+      );
+    } else if (recBooks === null) {
+      return (
+        <View style={[styles.response, { justifyContent: 'center' }]}>
+          <Text style={[ styles.loadingText, { paddingTop: 0 }]}>Take a picture of some books!</Text>
+        </View>
+      );
+    } else if (recBooks.length == 0) {
+      return (
+        <View style={[styles.response, { justifyContent: 'center' }]}>
+          <Text style={[styles.loadingText, { paddingTop: 0 }]}>There aren't any books for you in this picture. Try someplace else!</Text>
+        </View>
+      );
+    } else {
+      return (<FlatList
+        style={styles.response}
+        data={recBooks}
+        renderItem={({item}) => (<BookListItem id={item.title} book={item} />)}
+      />)
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,11 +109,7 @@ export default function SelectScreen({ navigation, extraData }) {
           );
         }}
       </RNCamera>
-      <FlatList
-        style={styles.response}
-        data={recBooks}
-        renderItem={({item}) => (<BookListItem id={item.title} book={item} />)}
-      />
+      {renderBottom()}
     </SafeAreaView>
   );
 }
