@@ -1,45 +1,60 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, SectionList} from 'react-native';
+import { genre2Labels, getBooksFromGenre } from '../../utils';
 import styles from './styles';
 
-const popular_books = {
-  'Action and Adventure': ['Harry Potter and the Phoenix of Fire', 'The Giver'],
-  Biographies: ['The Adventure of Arjun and Arjun', "Where's Waldo?"],
-  Classics: ['To Kill a Cuckoo', "Over the Mockingbird's Nest"],
-  Fantasy: ['Acing the CS 130 Quiz'],
-  'Sci-Fi': ['Star Wars', 'The Other Lesser Ones'],
-  'Suspense and Thrillers': ['The Effective Engineer', 'Gaang of Four'],
-  Cookbooks: ['Ocaml: How to Guarantee Spaghetti Code'],
-  Poetry: ['Horton Hears a Seg Fault', 'Oompa Loompa'],
-  "I'm a loser who doesn't read": ['9gag.com'],
-};
-
 // Home screen provides recommendation based off genres the user prefers
-export default function HomeScreen({user, extraData}) {
-  const user_genres = extraData?.user?.selectedBooks.map(
-    (genre) => genre.label,
-  );
-  var recommended_books = [];
-  var default_books = [];
-  for (var genre in popular_books) {
-    default_books.push({title: genre, data: popular_books[genre]});
-    if (user_genres.includes(genre)) {
-      recommended_books.push({title: genre, data: popular_books[genre]});
+export default function HomeScreen({extraData}) {
+  const {name, genres} = extraData?.user;
+  const [hour, setHour ] = useState(0);
+  const [ greeting, setGreeting ] = useState('Good Evening');
+  const [recommendations, setRecommendations] = useState(undefined);
+
+  useEffect(() => {
+    setHour((new Date).getHours());
+
+    const getRecs = async () => {
+      const recs = await genres.reduce(async (acc, genre) => {
+        return [
+          ...(await acc),
+          { 
+            title: genre2Labels[genre],
+            data: (await getBooksFromGenre(genre, 2)),
+          }
+        ]
+      }, []);
+      setRecommendations(recs);
     }
-  }
-  recommended_books =
-    recommended_books.length == 0 ? default_books : recommended_books;
+    getRecs();
+  }, []);
+
+  useEffect(() => {
+    if (17 <= hour || hour < 7) {
+      setGreeting('Good Evening');
+    } else if (7 <= hour && hour < 12) {
+      setGreeting('Good Morning');
+    } else {
+      setGreeting('Good Afternoon');
+    }
+  }, [hour]);
+
   return (
     <View style={styles.container}>
+      <View style={styles.greetingContainer}>
+        <Text style={styles.greeting}>{greeting}</Text> 
+        <Text style={styles.name}>{name.split(' ')[0]} 👋 </Text>
+      </View>
       <Text style={styles.header}>Book Recommendations</Text>
-      <SectionList
-        sections={recommended_books}
-        renderItem={({item}) => <Text style={styles.book}>{item}</Text>}
-        renderSectionHeader={({section}) => (
-          <Text style={styles.sectionHeader}>{section.title}</Text>
-        )}
-        keyExtractor={(item, index) => index}
-      />
+      {recommendations &&
+          <SectionList
+          sections={recommendations}
+          renderItem={({item}) => <Text style={styles.book}>{item.title} by {item.author}</Text>}
+          renderSectionHeader={({section}) => (
+            <Text style={styles.sectionHeader}>{section.title}</Text>
+          )}
+          keyExtractor={(item, index) => index}
+        />}
+
     </View>
   );
 }

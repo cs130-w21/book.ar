@@ -1,24 +1,35 @@
 import {StyleSheet} from 'react-native';
+import theme from '../../theme.style';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    marginLeft: theme.HMARGINS,
+    marginRight: theme.HMARGINS,
+  },
+  greetingContainer: {
+    marginTop: theme.VMARGINS * 2,
+  },
+  greeting: {
+    ...theme.HEADER,
+  },
+  name: {
+    ...theme.HEADER,
+  },
+  text: {
+    ...theme.BODY,
   },
   header: {
-    fontSize: 20,
-    margin: 4,
-  },
-  book_list: {
-    margin: 10,
+    ...theme.HEADER2,
+    marginTop: theme.VMARGINS,
   },
   book: {
-    margin: 1,
-    fontSize: 14,
+    ...theme.body,
+    marginTop: '4pt',
   },
   sectionHeader: {
-    marginTop: 6,
-    fontSize: 16,
-    fontWeight: 'bold',
+    paddingTop: theme.VMARGINS,
+    backgroundColor: theme.GRAY,
+    ...theme.HEADER3,
   },
 });
