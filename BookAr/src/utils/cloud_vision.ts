@@ -87,7 +87,7 @@ export async function getRecommendedBooks(base64: string, setRecBooks, setLoadin
   }
   const prefs = doc.data().prefs;
   console.log('user prefs', prefs);
-  const recResponse = await fetch('http://192.168.0.11:8080/recommend', {
+  const recResponse = await fetch('http://129.146.110.3/recommend', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
