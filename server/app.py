@@ -40,8 +40,6 @@ def create_app():
     model.set_user_preference(prefs)
     return model.make_recommendation(books, verbose=True).__dict__, 200
 
-      
-
   return app
 
 if __name__ == "__main__":
