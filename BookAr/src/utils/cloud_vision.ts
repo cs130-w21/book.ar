@@ -106,6 +106,7 @@ export async function getRecommendedBooks(base64: string, setRecBooks, setLoadin
     let finalJsonBook = finalJson.items[0].volumeInfo;
     let finalBook = {
       title: finalJsonBook.title,
+      key: finalJsonBook.title,
       author: finalJsonBook.authors[0],
       description: finalJsonBook.description,
       publisher: finalJsonBook.publisher,

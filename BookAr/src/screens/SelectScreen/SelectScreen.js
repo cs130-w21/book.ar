@@ -51,7 +51,7 @@ export default function SelectScreen({ navigation, extraData }) {
     } else if (recBooks.length == 0) {
       return (
         <View style={[styles.response, { justifyContent: 'center' }]}>
-          <Text style={[styles.loadingText, { paddingTop: 0 }]}>There aren't any books for you in this picture. Try someplace else!</Text>
+          <Text style={[styles.loadingText, { paddingTop: 0 }]}>No good books detected.</Text>
         </View>
       );
     } else {
