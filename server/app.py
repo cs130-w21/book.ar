@@ -18,7 +18,7 @@ def create_app():
       return f'No request body, please populate with books and prefs', 400
     if 'books' not in request_json:
       return f'\"books\" property not in request body', 400
-    if 'books' not in request_json:
+    if 'prefs' not in request_json:
       return f'\"pref\" property not in request body', 400
     books_json = request_json['books']
     prefs_json = request_json['prefs']
