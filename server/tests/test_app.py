@@ -73,4 +73,4 @@ def test_backend(client) -> None:
     '/recommend',
     data=json.dumps({'books': test_books, 'prefs': user_preferred_books}),
     content_type='application/json')
-  assert rv.data == b'{\"isbn\":\"059035342X\",\"title\":\"Harry Potter and the Sorcerer\'s Stone (Harry Potter (Paperback))\",\"author\":\"J. K. Rowling\",\"year\":1999}\n'
+  assert rv.data == b'{\"ISBN\":\"059035342X\",\"title\":\"Harry Potter and the Sorcerer\'s Stone (Harry Potter (Paperback))\",\"author\":\"J. K. Rowling\",\"year\":1999}\n'
