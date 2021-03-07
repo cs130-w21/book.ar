@@ -3,7 +3,6 @@ from flask import Flask, request
 from models import TFIDFBookRec
 from utils import Book
 
-
 def create_app():
   app=Flask(__name__)
 

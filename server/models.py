@@ -5,9 +5,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 
 class BookRecInterface:
-  """
-  BookRecInterface is a base class for other recommendation algorithms
-  """
+    """
+    BookRecInterface is a base class for other recommendation algorithms
+    """
     def make_recommendation(self, books):
       """
       Make a recommendation given a set of books.
