@@ -5,7 +5,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 
 class BookRecInterface:
+  """
+  BookRecInterface is a base class for other recommendation algorithms
+  """
     def make_recommendation(self, books):
+      """
+      Make a recommendation given a set of books.
+      """
         pass
     
     def save_model(self, output_path='saved_model/', output_model_name='book_rec_model'):
@@ -16,8 +22,6 @@ class BookRecInterface:
         with open('{}{}.pth'.format(input_path, input_model_name), "rb") as fp:   # Unpickling
             model = pickle.load(fp)
         self.book_ratings = model.book_ratings
-
-
 
 class PopularityBookRec(BookRecInterface):
     def __init__(self, book_ratings=None):
@@ -59,9 +63,14 @@ class PopularityBookRec(BookRecInterface):
         max_idx = np.array(scores).argmax()
         return books[max_idx].title, scores[max_idx]
 
-
-
 class TFIDFBookRec(BookRecInterface):
+    '''
+    A recommendation model that uses a TFIDF algorithm to determine whether a user would
+    want to read a given book.
+
+    Parameters:
+    threshold (float): a number between 0 and 1 that indicates the threshold score a book must have to be recommended
+    '''
     def __init__(self, threshold=0.01):
         self.score_weights = np.array([0.5, 0.4, 0.1, 0.0])
         self.tfidf = TfidfVectorizer(analyzer='word', ngram_range=(1, 2), min_df=1, stop_words='english')
@@ -73,6 +82,13 @@ class TFIDFBookRec(BookRecInterface):
         self.threshold = threshold
     
     def train_ratings(self, books, ratings):
+        '''
+        Given the books and their ratings, create a merged list of book isbn and titles to ratings
+
+        Parameters:
+        books (pandas.dataframe): a data frame with isbn, title, author, year, publisher, etc.
+        ratings (pandas.dataframe): a data frame with isbn and bookRating properties
+        '''
         ratings_avg = pd.DataFrame(ratings.groupby(['ISBN'])['bookRating'].mean()).rename(columns={'bookRating':'avgRating'})
         ratings_count = pd.DataFrame(ratings.groupby(['ISBN'])['bookRating'].count()).rename(columns={'bookRating':'numRatings'})
         merged_ratings = ratings_count.merge(ratings_avg, left_index = True, right_on = 'ISBN')
@@ -82,6 +98,13 @@ class TFIDFBookRec(BookRecInterface):
         self.book_ratings = normalized_ratings.merge(books[['ISBN', 'title']], left_index = True, right_on = 'ISBN')
         
     def train_tfidf(self, train_df, return_tfidf_matrix=False):
+        '''
+        Given a dataframe of test data, train the tfidf model.
+
+        Parameters:
+        train_df (pandas.dataframe): A data frame with isbn, title, author, year, publisher, etc.
+        return_tfidf_matrix (boolean): A flag that sets the model to be a document-term matrix
+        '''
         title_corpus = train_df['title']
         if return_tfidf_matrix:
             return self.tfidf.fit_transform(title_corpus)
@@ -92,9 +115,18 @@ class TFIDFBookRec(BookRecInterface):
         return [b.title for b in books]
 
     def fit_new_corpus(self, new_corpus):
+        '''
+        Given a new corpus of text, fit the data to the tfidf model.
+        '''
         return self.tfidf.transform(new_corpus)
         
     def set_user_preference(self, preferred_books):
+        '''
+        Set the user preference, given a list of books
+
+        Parameters:
+        preferred_books (array of books): a list of books with at least isbn and title
+        '''
         pref_corpus = self._get_corpus(preferred_books)
         self.pref_tfidf = self.fit_new_corpus(pref_corpus)
         
@@ -103,6 +135,12 @@ class TFIDFBookRec(BookRecInterface):
         self.pref_years = [b.year for b in preferred_books]
         
     def look_up_book(self, book):
+        '''
+        Given a book, return the index of its location in the dataset.
+
+        Parameters:
+        book (object): A python object with either an ISBN or title property
+        '''
         if book.ISBN:
             index = self.book_ratings[self.book_ratings['ISBN'] == book.ISBN].index
             if len(index) > 0:
@@ -114,6 +152,12 @@ class TFIDFBookRec(BookRecInterface):
         return None
         
     def compute_book_score(self, book):
+        '''
+        Compute a book score given a list of perferred books.
+        
+        Parameters:
+        book (object): An object with isbn, 
+        '''
         score = self._compute_book_score(book)
         index = self.look_up_book(book)
         if index is None:
@@ -126,9 +170,6 @@ class TFIDFBookRec(BookRecInterface):
             return total_score.round(4)
             
     def _compute_book_score(self, new_book):
-        '''
-        compute book score based on user preference
-        '''
         new_corpus = self._get_corpus([new_book])
         new_tfidf = self.fit_new_corpus(new_corpus)
         tfidf_score = cosine_similarity(new_tfidf, self.pref_tfidf).reshape(1, -1)
@@ -139,6 +180,13 @@ class TFIDFBookRec(BookRecInterface):
         return self.score_weights.dot(score_matrix).max()
 
     def make_recommendation(self, books, verbose=True):
+        '''
+        Give a list of books, return the book with the biggest fit
+
+        Parameters:
+        books (array of books): a list of objects with isbn, title, author, publisher
+        verbose (boolean): a flag to log the output
+        '''
         books = self._make_recommendation(books, verbose)
         return books
     
