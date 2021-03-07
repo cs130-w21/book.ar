@@ -25,6 +25,18 @@ export default StyleSheet.create({
     alignSelf: 'center',
     margin: 20,
   },
+  loader: {
+    alignSelf: 'center',
+    transform: [{ scale: 2 }]
+  },
+  loadingText: {
+    alignSelf: 'center',
+    fontSize: 16,
+    paddingTop: 30,
+    fontWeight: 'bold',
+    color: '#888',
+    textAlign: 'center'
+  },
   response: {
     flex: 1,
   },
