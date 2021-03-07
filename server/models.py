@@ -1,8 +1,8 @@
-import pandas as pd
-import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import pickle
+# import pandas as pd
+# import numpy as np
+# from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.metrics.pairwise import cosine_similarity
+# import pickle
 
 class BookRecInterface:
     """
@@ -197,7 +197,7 @@ class TFIDFBookRec(BookRecInterface):
         rec_books = []
         for i in range(0, len(books)):
             if verbose:
-                print(f"Book \"{books[i].title}\": {scores[i]}")
+                print(f'Book {books[i].title}: {scores[i]}')
             if scores[i] > self.threshold:
                 rec_books.append(books[i])
 
