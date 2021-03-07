@@ -41,9 +41,15 @@ user_preferred_book3 = {
   'author': 'Mitch Albom',
   'year': 2003,
   'publisher': 'Hyperion',
-}  
+}
 
-user_preferred_books = [user_preferred_book1, user_preferred_book2, user_preferred_book3]
+user_preferred_book4 = {
+  'isbn': '0552150738',
+  'title': 'Angels and Demos',
+  'author': 'Dan Brown'
+}
+
+user_preferred_books = [user_preferred_book1, user_preferred_book2, user_preferred_book3, user_preferred_book4]
 
 # Root test to make sure the flask server runs
 def test_index(client) -> None:
@@ -73,4 +79,4 @@ def test_backend(client) -> None:
     '/recommend',
     data=json.dumps({'books': test_books, 'prefs': user_preferred_books}),
     content_type='application/json')
-  assert rv.data == b'{\"ISBN\":\"059035342X\",\"author\":\"J. K. Rowling\",\"imageUrl\":null,\"publisher\":\"Arthur A. Levine Books\",\"title\":\"Harry Potter and the Sorcerer\'s Stone (Harry Potter (Paperback))\",\"year\":1999}\n'
+  assert rv.data == b'[{\"ISBN\": \"0385504209\", \"title\": \"The Da Vinci Code\", \"author\": \"Dan Brown\", \"year\": null, \"publisher\": null, \"imageUrl\": null}]'

@@ -6,7 +6,7 @@ import theme from './theme.style';
 
 const Tab = createBottomTabNavigator();
 
-export default function HomeTabs({extraData }) {
+export default function HomeTabs({extraData}) {
   return (
     <Tab.Navigator
       initialRouteName="Home"
