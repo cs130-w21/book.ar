@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/SelectScreen/SelectScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/SelectScreen/SelectScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useEffect, useState, useRef} from 'react';
+import {ActivityIndicator, FlatList, Text, View, TouchableOpacity, SafeAreaView} from 'react-native';
+import {RNCamera} from 'react-native-camera';
+import styles from './styles';
+import * as ImagePicker from '../../utils/image_picker';
+import * as Recommender from '../../utils/recommender';
+import BookListItem from './BookListItem.js';
+
+/**
+ * This is the React component which defines the UI for the Select screen in the app.
+ *
+ * @function SelectScreen
+ * @param {Object} props - This is a dictionary of component properties.
+ * @returns {JSX.Element} A JSX element defining the UI.
+ * @namespace
+ */
+export default function SelectScreen({ navigation, extraData }) {
+  const [ focus, setFocus ] = useState({x: 0.5, y: 0.5});
+  const [ snapBtnText, setSnapBtnText ] = useState('SNAP');
+  const [ recBooks, setRecBooks ] = useState(null);
+  const [ loading, setLoading ] = useState({ isLoading: false, msg: "loading stuff" });
+
+  // const cameraRef = useRef(null);
+  const pictureTakenRef = useRef(false);
+
+  /**
+   * This function takes a picture using the user's camera and calls our function to recommend books.
+   *
+   * @async
+   * @function takePicture
+   * @param {Object} camera - A reference to the camera being used.
+   * @memberof SelectScreen
+   * @inner
+   */
+  const takePicture = async (camera) => {
+    pictureTakenRef.current = !(pictureTakenRef.current);
+    if (camera &amp;&amp; pictureTakenRef.current == false) {
+      const options = {base64: true, quality: 1, pauseAfterCapture: true}; //PAUSE ALLOWS FOR STATIC IMAGE ON SCREEN
+      const data = await camera.takePictureAsync(options);
+      setSnapBtnText('AGAIN');
+      Recommender.getRecommendedBooks(data.base64, setRecBooks, setLoading)
+        .catch(ex => {
+          console.error(ex);
+          setLoading({ isLoading: false, msg: "" });
+          setRecBooks([]);
+        });
+    } else if(camera){
+      camera.resumePreview(); //CALL THIS TO RESUME PREVIEW / BE ABLE TO TAKE ANOTHER
+      setSnapBtnText('SNAP');
+      setRecBooks(null);
+    }
+  };
+
+  /**
+   * This function defines which component to display beneath the camera on the Select screen
+   * based on the value of the state variables corresponding to loading and recommended books.
+   *
+   * @function renderBottom
+   * @memberof SelectScreen
+   * @inner
+   */
+  const renderBottom = () => {
+    if (loading.isLoading) {
+      return(
+        &lt;View style={[styles.response, { justifyContent: 'center' }]}>
+          &lt;ActivityIndicator style={styles.loader} color="#ff0000" size="large" />
+          &lt;Text style={styles.loadingText}>{loading.msg}&lt;/Text>
+        &lt;/View>
+      );
+    } else if (recBooks === null) {
+      return (
+        &lt;View style={[styles.response, { justifyContent: 'center' }]}>
+          &lt;Text style={[ styles.loadingText, { paddingTop: 0 }]}>Take a picture of some books!&lt;/Text>
+        &lt;/View>
+      );
+    } else if (recBooks.length == 0) {
+      return (
+        &lt;View style={[styles.response, { justifyContent: 'center' }]}>
+          &lt;Text style={[styles.loadingText, { paddingTop: 0 }]}>No good books detected.&lt;/Text>
+        &lt;/View>
+      );
+    } else {
+      return (&lt;FlatList
+        style={styles.response}
+        data={recBooks}
+        renderItem={({item}) => (&lt;BookListItem id={item.title} book={item} />)}
+      />)
+    }
+  }
+
+  return (
+    &lt;SafeAreaView style={styles.container}>
+      &lt;RNCamera
+        // ref={cameraRef}
+        style={styles.preview}
+        captureAudio={false}
+        // ratio={'3:4'}
+        autoFocusPointOfInterest={focus}
+        defaultVideoQuality={RNCamera.Constants.Vid}
+        type={RNCamera.Constants.Type.back}
+        flashMode={RNCamera.Constants.FlashMode.off}
+        onTap={(event) => setFocus({x: event.x, y: event.y})}
+        // onDoubleTap={() => takePicture(camera)}
+        androidCameraPermissionOptions={{
+          title: 'Permission to use camera',
+          message: 'We need your permission to use your camera',
+          buttonPositive: 'Ok',
+          buttonNegative: 'Cancel',
+        }}>
+        {({camera, status}) => {
+          if (status !== 'READY' || !camera ) return &lt;>&lt;/>;
+          return (
+            &lt;View style={styles.buttonContainer}>
+              &lt;TouchableOpacity onPress={() => takePicture(camera)} style={styles.capture}>
+                &lt;Text>{snapBtnText}&lt;/Text>
+              &lt;/TouchableOpacity>
+              &lt;TouchableOpacity
+                onPress={() =>
+                  ImagePicker.launchImageLibrary(
+                    {
+                      mediaType: 'photo',
+                      includeBase64: true,
+                      quality: 1,
+                    },
+                    (data) => {
+                      CloudVision.getRecommendedBooks(data.base64, setRecBooks, setLoading);
+                    },
+                  )
+                }
+                style={styles.capture}>
+                &lt;Text> CHOOSE &lt;/Text>
+              &lt;/TouchableOpacity>
+            &lt;/View>
+          );
+        }}
+      &lt;/RNCamera>
+      {renderBottom()}
+    &lt;/SafeAreaView>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Firebase.html">Firebase</a></li><li><a href="ImagePicker.html">ImagePicker</a></li><li><a href="Recommender.html">Recommender</a></li><li><a href="SelectScreen.html">SelectScreen</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Sun Mar 07 2021 01:44:43 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
