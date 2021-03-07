@@ -19,6 +19,7 @@ export default function SelectScreen({ navigation, extraData }) {
   const [ focus, setFocus ] = useState({x: 0.5, y: 0.5});
   const [ snapBtnText, setSnapBtnText ] = useState('SNAP');
   const [ recBooks, setRecBooks ] = useState(null);
+  const [availableBooks, setAvailableBooks] = useState(null);
   const [ loading, setLoading ] = useState({ isLoading: false, msg: "loading stuff" });
   const [ selectedBook, setSelectedBook ] = useState(null);
 
@@ -40,17 +41,23 @@ export default function SelectScreen({ navigation, extraData }) {
       const options = {base64: true, quality: 1, pauseAfterCapture: true}; //PAUSE ALLOWS FOR STATIC IMAGE ON SCREEN
       const data = await camera.takePictureAsync(options);
       setSnapBtnText('AGAIN');
-      Recommender.getRecommendedBooks(data.base64, setRecBooks, setLoading)
-        .catch(ex => {
-          console.error(ex);
-          setLoading({ isLoading: false, msg: "" });
-          setRecBooks([]);
-        });
+      Recommender.getRecommendedBooks(
+        data.base64,
+        setRecBooks,
+        setLoading,
+        setAvailableBooks,
+      ).catch((ex) => {
+        console.error(ex);
+        setLoading({isLoading: false, msg: ''});
+        setRecBooks([]);
+        setAvailableBooks([]);
+      });
     } else if(camera){
       pictureTakenRef.current = !(pictureTakenRef.current);
       camera.resumePreview(); //CALL THIS TO RESUME PREVIEW / BE ABLE TO TAKE ANOTHER
       setSnapBtnText('SNAP');
       setRecBooks(null);
+      setAvailableBooks(null);
     }
   };
 
@@ -70,30 +77,58 @@ export default function SelectScreen({ navigation, extraData }) {
           <Text style={styles.loadingText}>{loading.msg}</Text>
         </View>
       );
-    } else if (recBooks === null) {
+    } else if (recBooks === null || availableBooks == null) {
       return (
-        <View style={[styles.response, { justifyContent: 'center' }]}>
-          <Text style={[ styles.loadingText, { paddingTop: 0 }]}>Take a picture of some books!</Text>
+        <View style={[styles.response, {justifyContent: 'center'}]}>
+          <Text style={[styles.loadingText, {paddingTop: 0}]}>
+            Take a picture of some books!
+          </Text>
         </View>
       );
+    } else if (recBooks.length == 0 && availableBooks.length == 0) {
+      return(
+      <View style={[styles.response, {justifyContent: 'center'}]}>
+        <Text style={[styles.loadingText, {margin: 10}]}>
+          No books detected
+        </Text>
+      </View>);
     } else if (recBooks.length == 0) {
       return (
-        <View style={[styles.response, { justifyContent: 'center' }]}>
-          <Text style={[styles.loadingText, { paddingTop: 0 }]}>No good books detected.</Text>
+        <View style={[styles.response, {justifyContent: 'center'}]}>
+          <Text style={[styles.loadingText, {margin: 10}]}>
+            No good books detected... Here are all available
+          </Text>
+          <FlatList
+            style={styles.response}
+            data={availableBooks}
+            renderItem={({item}) => (
+              <BookListItem
+                id={item.title}
+                book={item}
+                onPress={() => {
+                  setSelectedBook(item);
+                }}
+              />
+            )}
+          />
         </View>
       );
     } else {
-      return (<FlatList
-        style={styles.response}
-        data={recBooks}
-        renderItem={({item}) => (
-          <BookListItem
-            id={item.title}
-            book={item}
-            onPress={() => { setSelectedBook(item) }}
-          />
-        )}
-      />)
+      return (
+        <FlatList
+          style={styles.response}
+          data={recBooks}
+          renderItem={({item}) => (
+            <BookListItem
+              id={item.title}
+              book={item}
+              onPress={() => {
+                setSelectedBook(item);
+              }}
+            />
+          )}
+        />
+      );
     }
   }
 
@@ -138,7 +173,12 @@ export default function SelectScreen({ navigation, extraData }) {
                       quality: 1,
                     },
                     (data) => {
-                      Recommender.getRecommendedBooks(data.base64, setRecBooks, setLoading);
+                      Recommender.getRecommendedBooks(
+                        data.base64,
+                        setRecBooks,
+                        setLoading,
+                        setAvailableBooks,
+                      );
                     },
                   )
                 }

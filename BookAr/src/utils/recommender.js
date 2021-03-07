@@ -50,7 +50,7 @@ import {searchBookOnGoogle} from './index';
  * @param {loadingCallback} setLoading - A React state modifier callback to set loading status.
  * @memberof Recommender
  */
-export async function getRecommendedBooks(base64, setRecBooks, setLoading) {
+export async function getRecommendedBooks(base64, setRecBooks, setLoading, setAvailableBooks) {
   // First, use the Cloud Vision API to detect text within the image.
   setLoading({ isLoading: true, msg: "Looking for books in image..." });
   console.log('fetching vision data');
@@ -137,15 +137,27 @@ export async function getRecommendedBooks(base64, setRecBooks, setLoading) {
 
   // After receiving a list of recommended books, we search the titles through the Google Books API in order
   // to get other metadata such as author, description, and cover.
-  let finalBooks = []
+  let finalBooks = [];
+  let availableBooks = [];
   console.log('getting book data');
   for (let recBook of recJson) {
     let finalBook = await searchBookOnGoogle(recBook, true);
     finalBooks.push(finalBook);
   }
+  if(finalBooks.length == 0){
+      for (let availableBook of titles) {
+        let book = await searchBookOnGoogle(
+          {title: availableBook.title, author: availableBook.author},
+          true,
+        );
+        availableBooks.push(book);
+      }
+  }
+
 
   // Finally, we use the callback to tell the React UI Manager that processing is complete and to display
   // the list of recommended books.
   setLoading({ isLoading: false, msg: "" });
   setRecBooks(finalBooks);
+  setAvailableBooks(availableBooks);
 }
