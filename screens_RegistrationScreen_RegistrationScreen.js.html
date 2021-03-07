@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screens/RegistrationScreen/RegistrationScreen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screens/RegistrationScreen/RegistrationScreen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {useEffect, useState} from 'react';
+import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import SelectMultiple from 'react-native-select-multiple'
+import {firebase} from '../../utils/firebase';
+import {labels2Genre} from '../../utils';
+import styles from './styles';
+
+/**
+ * This is the React component which defines the UI for the User Registration screen in the app.
+ *
+ * @function RegistrationScreen
+ * @param {Object} props - This is a dictionary of component properties.
+ * @namespace
+ */
+export default function RegistrationScreen({navigation}) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [selectedBooks, setSelectedBooks] = useState([]);
+
+  /**
+   * This function triggers a navigation event to navigate to the Login screen.
+   *
+   * @function onFooterLinkPress
+   * @memberof RegistrationScreen
+   */
+  const onFooterLinkPress = () => {
+    navigation.navigate('Login');
+  };
+
+  /**
+   * This function uses the data entered by the user to register a new user with Firebase
+   * and update our Firestore accordingly.
+   *
+   * @function onRegisterPress
+   * @memberof RegistrationScreen
+   */
+  const onRegisterPress = () => {
+    if (password !== confirmPassword) {
+      alert("Passwords don't match.");
+      return;
+    }
+
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((res) => {
+        const uid = res.user.uid;
+        const data = {
+          id: uid,
+          email,
+          name,
+          genres: selectedBooks.map(({label}) => labels2Genre[`${label}`]),
+        };
+
+        const usersRef = firebase.firestore().collection('users');
+        usersRef
+          .doc(uid)
+          .set(data)
+          .then(() => navigation.navigate('Home', {user: data}))
+          .catch((err) => alert(err));
+      })
+      .catch((err) => alert(err));
+  };
+
+  return (
+    &lt;View style={styles.container}>
+      &lt;KeyboardAwareScrollView
+        style={{flex: 1, width: '100%'}}
+        keyboardShouldPersistTaps="always">
+        &lt;Image
+          style={styles.logo}
+          source={require('../../../assets/icon.png')}
+        />
+        &lt;TextInput
+          style={styles.input}
+          placeholder="Full Name"
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => setName(text)}
+          value={name}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        &lt;TextInput
+          style={styles.input}
+          placeholder="E-mail"
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        &lt;TextInput
+          style={styles.input}
+          placeholderTextColor="#aaaaaa"
+          secureTextEntry
+          placeholder="Password"
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        &lt;TextInput
+          style={styles.input}
+          placeholderTextColor="#aaaaaa"
+          secureTextEntry
+          placeholder="Confirm Password"
+          onChangeText={(text) => setConfirmPassword(text)}
+          value={confirmPassword}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        &lt;Text style={styles.text}>Tell Us What Kinds of Books you Like!&lt;/Text>
+        &lt;SelectMultiple
+          style={styles.multiselect}
+          items={Object.keys(labels2Genre)}
+          selectedItems={selectedBooks}
+          onSelectionsChange={(books) => setSelectedBooks(books)}
+        />
+        &lt;TouchableOpacity
+          style={styles.button}
+          onPress={() => onRegisterPress()}>
+          &lt;Text style={styles.buttonTitle}>Create account&lt;/Text>
+        &lt;/TouchableOpacity>
+        &lt;View style={styles.footerView}>
+          &lt;Text style={styles.footerText}>
+            Already got an account?{' '}
+            &lt;Text onPress={onFooterLinkPress} style={styles.footerLink}>
+              Log in
+            &lt;/Text>
+          &lt;/Text>
+        &lt;/View>
+      &lt;/KeyboardAwareScrollView>
+    &lt;/View>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="global.html#Button">Button</a></li><li><a href="Firebase.html">Firebase</a></li><li><a href="HomeScreen.html">HomeScreen</a></li><li><a href="HomeTabs.html">HomeTabs</a></li><li><a href="ImagePicker.html">ImagePicker</a></li><li><a href="LoginScreen.html">LoginScreen</a></li><li><a href="ProfileScreen.html">ProfileScreen</a></li><li><a href="Recommender.html">Recommender</a></li><li><a href="RegistrationScreen.html">RegistrationScreen</a></li><li><a href="screens.html">screens</a></li><li><a href="SelectScreen.html">SelectScreen</a></li><li><a href="SelectScreen.BookListItem.html">BookListItem</a></li><li><a href="Utilities.html">Utilities</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Sun Mar 07 2021 05:37:12 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

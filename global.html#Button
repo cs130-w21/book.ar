@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: Firebase</title>
+    <title>JSDoc: Namespace: Button</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Namespace: Firebase</h1>
+    <h1 class="page-title">Namespace: Button</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2>Firebase</h2>
+        <h2>Button</h2>
         
     
 </header>
@@ -70,7 +70,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_firebase.js.html">utils/firebase.js</a>, <a href="utils_firebase.js.html#line1">line 1</a>
+        <a href="utils_Button.js.html">utils/Button.js</a>, <a href="utils_Button.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -103,10 +103,14 @@
 
         
             
-<h4 class="name" id=".config"><span class="type-signature">(static, constant) </span>config<span class="type-signature"> :<a href="global.html#FirebaseConfig">FirebaseConfig</a></span></h4>
+<h4 class="name" id=".styles"><span class="type-signature">(static, constant) </span>styles<span class="type-signature"> :Object</span></h4>
 
 
 
+
+<div class="description">
+    The sytlesheet for the button
+</div>
 
 
 
@@ -114,7 +118,7 @@
     <ul>
         <li>
             
-<span class="param-type"><a href="global.html#FirebaseConfig">FirebaseConfig</a></span>
+<span class="param-type">Object</span>
 
 
         </li>
@@ -153,7 +157,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_firebase.js.html">utils/firebase.js</a>, <a href="utils_firebase.js.html#line26">line 26</a>
+        <a href="utils_Button.js.html">utils/Button.js</a>, <a href="utils_Button.js.html#line28">line 28</a>
     </li></ul></dd>
     
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: Firebase</title>
+    <title>JSDoc: Source: common/BookListItem/BookListItem.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,169 +17,49 @@
 
 <div id="main">
 
-    <h1 class="page-title">Namespace: Firebase</h1>
+    <h1 class="page-title">Source: common/BookListItem/BookListItem.js</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>Firebase</h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-        
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_firebase.js.html">utils/firebase.js</a>, <a href="utils_firebase.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id=".config"><span class="type-signature">(static, constant) </span>config<span class="type-signature"> :<a href="global.html#FirebaseConfig">FirebaseConfig</a></span></h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="global.html#FirebaseConfig">FirebaseConfig</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils_firebase.js.html">utils/firebase.js</a>, <a href="utils_firebase.js.html#line26">line 26</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import {TouchableOpacity, Image, Text, View} from 'react-native';
+import styles from './styles';
+
+/**
+ * This is a React component defining a single item in a FlatList representing a Book.
+ *
+ * @param {Object} props - This dictionary represents the properties passed to the component.
+ * @param {Object} props.book - This represents the book to be displayed in the FlatList item.
+ * @namespace BookListItem
+ * @memberof SelectScreen
+ */
+export default function BookListItem(props) {
+  return (
+    &lt;TouchableOpacity
+      style={[styles.listItem, props.style]}
+      onPress={props.onPress}
+      activeOpacity={props.onPress ? 0.2 : 1}
+    >
+      &lt;Image style={styles.listItemImg} source={{ uri: props.book.coverUrl }} />
+      &lt;View style={styles.listItemBody}>
+        &lt;Text style={styles.listItemTitle}>{props.book.title}&lt;/Text>
+        &lt;Text style={styles.listItemSubtitle}>{props.book.author}&lt;/Text>
+        &lt;Text
+          style={styles.listItemBodyText}
+          numberOfLines={3}
+        >{props.book.description}&lt;/Text>
+      &lt;/View>
+    &lt;/TouchableOpacity>
+  );
+}
+</code></pre>
+        </article>
+    </section>
 
 
 
