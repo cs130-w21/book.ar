@@ -9,9 +9,9 @@ class BookRecInterface:
     BookRecInterface is a base class for other recommendation algorithms
     """
     def make_recommendation(self, books):
-      """
-      Make a recommendation given a set of books.
-      """
+        """
+        Make a recommendation given a set of books.
+        """
         pass
     
     def save_model(self, output_path='saved_model/', output_model_name='book_rec_model'):
