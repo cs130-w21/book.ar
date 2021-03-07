@@ -1,3 +1,7 @@
+/**
+ * Main module for application
+ * @module App
+ */
 import 'react-native-gesture-handler';
 import React, {useEffect, useState} from 'react';
 import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
@@ -56,6 +60,7 @@ export default function App() {
     return <></>;
   }
 
+  // Either send the user to the home screen or to the login screen based on `user`
   return (
     <NavigationContainer>
       <Stack.Navigator>
