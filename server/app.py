@@ -1,7 +1,7 @@
-# import json
-# from flask import Flask, request
-# from models import TFIDFBookRec
-# from utils import Book
+import json
+from flask import Flask, request
+from models import TFIDFBookRec
+from utils import Book
 
 def create_app():
   '''

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# import pandas as pd
+import pandas as pd
 
 def data_preprocessing(books, ratings):
     # change column names
