@@ -1,13 +1,13 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {RefreshControl, Alert, FlatList, ScrollView, ActivityIndicator, Text, View, SectionList} from 'react-native';
-import { genre2Labels, getBooksFromGenre, getReadingBooks, removeFromReading,addToPrefs } from '../../utils';
+import {getGenres, genre2Labels, getBooksFromGenre, getReadingBooks, removeFromReading,addToPrefs } from '../../utils';
 import BookModal from '../SelectScreen/BookModal';
 import BookListItem from '../../common/BookListItem/BookListItem';
 import styles from './styles';
 
 // Home screen provides recommendation based off genres the user prefers
 export default function HomeScreen({extraData}) {
-  const {name, genres} = extraData?.user;
+  const {name} = extraData?.user;
   const [hour, setHour ] = useState(0);
   const [ greeting, setGreeting ] = useState('Good Evening');
   const [recommendations, setRecommendations] = useState(undefined);
@@ -23,22 +23,23 @@ export default function HomeScreen({extraData}) {
       setReading(reading);
   }
 
+  const getRecs = async () => {
+    const genres = await getGenres();
+    const recs = await genres.reduce(async (acc, genre) => {
+      return [
+        ...(await acc),
+        { 
+          title: genre2Labels[genre],
+          data: (await getBooksFromGenre(genre, 2)),
+        }
+      ]
+    }, []);
+    setLoading(false);
+    setRecommendations(recs);
+  }
+
   useEffect(() => {
     setHour((new Date).getHours());
-
-    const getRecs = async () => {
-      const recs = await genres.reduce(async (acc, genre) => {
-        return [
-          ...(await acc),
-          { 
-            title: genre2Labels[genre],
-            data: (await getBooksFromGenre(genre, 2)),
-          }
-        ]
-      }, []);
-      setLoading(false);
-      setRecommendations(recs);
-    }
 
     getReading();
     getRecs();
@@ -85,7 +86,12 @@ export default function HomeScreen({extraData}) {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await getReading();
+    try {
+      await getReading().catch((e) => {console.error(e)});
+      await getRecs().catch((e) => {console.error(e)});
+    } catch (e) {
+      console.error(e);
+    }
     setRefreshing(false);
   }, []);
 
@@ -105,7 +111,7 @@ export default function HomeScreen({extraData}) {
           onDismiss={() => {setSelectedBook(null)}}
         />}
       <View style={styles.greetingContainer}>
-        <Text style={styles.greeting}>{greeting}</Text> 
+        <Text style={styles.greeting}>{greeting},</Text> 
         <Text style={styles.name}>{name.split(' ')[0]} 👋 </Text>
       </View>
       {loading &&

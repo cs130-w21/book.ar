@@ -46,6 +46,18 @@ export const searchBookOnGoogle = async (bookToSearch, verbose = false) => {
   return book;
 }
 
+export const getGenres = async () => {
+  const uid = firebase.auth().currentUser.uid;
+  const usersDoc = firebase.firestore().collection('users').doc(uid);
+  const doc = await usersDoc.get();
+  if (!doc.exists) {
+    console.log('User does not exist, something\'s wrong');
+    return;
+  }
+  const genres = doc.data().genres;
+  return genres;
+}
+
 export const getBooksFromGenres = async (genres, numOfBooks = 1) => {
   const ret = await genres.reduce(async (acc, genre) => {
     return [...(await acc), ...(await getBooksFromGenre(genre, numOfBooks))];
