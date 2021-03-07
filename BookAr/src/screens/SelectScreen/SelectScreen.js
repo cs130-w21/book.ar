@@ -2,8 +2,8 @@ import React, {useEffect, useState, useRef} from 'react';
 import {ActivityIndicator, FlatList, Text, View, TouchableOpacity, SafeAreaView} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import styles from './styles';
-import * as ImagePicker from '../../utils/image_picker.js';
-import * as Recommender from '../../utils/recommender.js';
+import * as ImagePicker from '../../utils/image_picker';
+import * as Recommender from '../../utils/recommender';
 import BookListItem from './BookListItem.js';
 
 /**

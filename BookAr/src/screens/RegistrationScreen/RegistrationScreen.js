@@ -41,7 +41,7 @@ export default function RegistrationScreen({navigation}) {
           id: uid,
           email,
           name,
-          prefs: selectedBooks.map(book => { return { isbn: book.value }; })
+          selectedBooks
         };
 
         const usersRef = firebase.firestore().collection('users');
