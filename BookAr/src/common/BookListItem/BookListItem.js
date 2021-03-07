@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Text, View} from 'react-native';
+import {TouchableOpacity, Image, Text, View} from 'react-native';
 import styles from './styles';
 
 /**
@@ -12,7 +12,11 @@ import styles from './styles';
  */
 export default function BookListItem(props) {
   return (
-    <View style={styles.listItem}>
+    <TouchableOpacity
+      style={[styles.listItem, props.style]}
+      onPress={props.onPress}
+      activeOpacity={props.onPress ? 0.2 : 1}
+    >
       <Image style={styles.listItemImg} source={{ uri: props.book.coverUrl }} />
       <View style={styles.listItemBody}>
         <Text style={styles.listItemTitle}>{props.book.title}</Text>
@@ -22,6 +26,6 @@ export default function BookListItem(props) {
           numberOfLines={3}
         >{props.book.description}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
