@@ -60,3 +60,79 @@ export const getBooksFromGenre = async (genre, numOfBooks = 1) => {
   const selectedBooks = random.length > numOfBooks ? random.slice(0, numOfBooks) : random;
   return await Promise.all(selectedBooks.map(async book => await searchBookOnGoogle(book, true)));
 }
+
+export const getReadingBooks = async () => {
+  const uid = firebase.auth().currentUser.uid;
+  const usersDoc = firebase.firestore().collection('users').doc(uid);
+  const doc = await usersDoc.get();
+  if (!doc.exists) {
+    console.log('User does not exist, something\'s wrong');
+    return;
+  }
+  const reading = doc.data().reading;
+  return reading;
+}
+
+export const addToReading = async (book) => {
+  const uid = firebase.auth().currentUser.uid;
+  const usersDoc = firebase.firestore().collection('users').doc(uid);
+  const doc = await usersDoc.get();
+  if (!doc.exists) {
+    console.log('User does not exist, something\'s wrong');
+    return;
+  }
+  const reading = doc.data().reading;
+  if (reading?.find(b => b && b.title == book.title) != undefined)
+    return;
+  console.log('user reading', reading);
+  for (let key of Object.keys(book))
+    book[key] == undefined && delete book[key];
+  await usersDoc.update({
+    reading: [
+      ...(reading || []), book
+    ]
+  });
+}
+
+export const removeFromReading = async (book) => {
+  const uid = firebase.auth().currentUser.uid;
+  const usersDoc = firebase.firestore().collection('users').doc(uid);
+  const doc = await usersDoc.get();
+  if (!doc.exists) {
+    console.log('User does not exist, something\'s wrong');
+    return;
+  }
+  const reading = doc.data().reading;
+  console.log(reading);
+  const bookIdx = reading?.findIndex(b => b && b.title == book.title);
+  console.log(bookIdx);
+  if (bookIdx < 0)
+    return;
+  reading.splice(bookIdx, 1);
+  
+  await usersDoc.update({ reading: reading });
+}
+
+export const addToPrefs = async (book) => {
+  const uid = firebase.auth().currentUser.uid;
+  const usersDoc = firebase.firestore().collection('users').doc(uid);
+  const doc = await usersDoc.get();
+  if (!doc.exists) {
+    console.log('User does not exist, something\'s wrong');
+    return;
+  }
+  const prefs = doc.data().prefs;
+  if (prefs?.find(b => b && b.title == book.title) != undefined)
+    return;
+  console.log('user prefs', prefs);
+  for (let key of Object.keys(book))
+    book[key] == undefined && delete book[key];
+  await usersDoc.update({
+    prefs: [
+      ...(prefs || []), {
+        title: book.title,
+        author: book.author
+      }
+    ]
+  });
+}

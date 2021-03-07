@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, Button, Image, Modal, View, Text, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import {firebase} from '../../utils/firebase';
+import {addToReading} from '../../utils';
 
 export default function BookModal({ showModal, book, onDismiss }) {
   return (
@@ -31,7 +32,8 @@ export default function BookModal({ showModal, book, onDismiss }) {
             <Button
               style={styles.modalButton}
               title="I'll check this out"
-              onPress={() => {
+              onPress={async () => {
+                await addToReading(book);
                 onDismiss();
               }}
             />
