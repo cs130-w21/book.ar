@@ -2,18 +2,13 @@ import React from 'react';
 import {Image, Text, View} from 'react-native';
 import styles from './styles';
 
-/*
- * props: {
- *    book: {
- *      title: string,
- *      description?: string,
- *      isbn?: string,
- *      year?: string,
- *      author?: string,
- *      publisher?: string,
- *      coverUrl?: string
- *    }
- * }
+/**
+ * This is a React component defining a single item in a FlatList representing a Book.
+ *
+ * @param {Object} props - This dictionary represents the properties passed to the component.
+ * @param {Object} props.book - This represents the book to be displayed in the FlatList item.
+ * @namespace BookListItem
+ * @memberof SelectScreen
  */
 export default function BookListItem(props) {
   return (
