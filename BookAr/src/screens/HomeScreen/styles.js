@@ -25,7 +25,7 @@ export default StyleSheet.create({
   },
   book: {
     ...theme.body,
-    marginTop: '4pt',
+    marginTop: 4,
   },
   sectionHeader: {
     paddingTop: theme.VMARGINS,

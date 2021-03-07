@@ -11,16 +11,7 @@ export default function RegistrationScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [genres, setGenres] = useState([]);
   const [selectedBooks, setSelectedBooks] = useState([]);
-
-  useEffect(() => {
-    setGenres(selectedBooks.map(({label}) => labels2Genre[`${label}`]));
-  }, [selectedBooks]);
-
-  useEffect(() => {
-    console.log(genres);
-  }, [genres]);
 
   const onFooterLinkPress = () => {
     navigation.navigate('Login');
@@ -41,7 +32,7 @@ export default function RegistrationScreen({navigation}) {
           id: uid,
           email,
           name,
-          genres,
+          genres: selectedBooks.map(({label}) => labels2Genre[`${label}`]),
         };
 
         const usersRef = firebase.firestore().collection('users');
