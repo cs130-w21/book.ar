@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, SectionList} from 'react-native';
+import {ActivityIndicator, Text, View, SectionList} from 'react-native';
 import { genre2Labels, getBooksFromGenre } from '../../utils';
+import BookListItem from '../../common/BookListItem/BookListItem';
 import styles from './styles';
 
 // Home screen provides recommendation based off genres the user prefers
@@ -9,6 +10,7 @@ export default function HomeScreen({extraData}) {
   const [hour, setHour ] = useState(0);
   const [ greeting, setGreeting ] = useState('Good Evening');
   const [recommendations, setRecommendations] = useState(undefined);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setHour((new Date).getHours());
@@ -23,6 +25,7 @@ export default function HomeScreen({extraData}) {
           }
         ]
       }, []);
+      setLoading(false);
       setRecommendations(recs);
     }
     getRecs();
@@ -45,16 +48,17 @@ export default function HomeScreen({extraData}) {
         <Text style={styles.name}>{name.split(' ')[0]} 👋 </Text>
       </View>
       <Text style={styles.header}>Book Recommendations</Text>
+      {loading &&
+          <ActivityIndicator style={{paddingTop: 50, transform: [{scale: 2}]}} size='large' color='#ff0000' />}
       {recommendations &&
           <SectionList
-          sections={recommendations}
-          renderItem={({item}) => <Text style={styles.book}>{item.title} by {item.author}</Text>}
-          renderSectionHeader={({section}) => (
-            <Text style={styles.sectionHeader}>{section.title}</Text>
-          )}
-          keyExtractor={(item, index) => index}
-        />}
-
+            sections={recommendations}
+            renderItem={({item}) => <BookListItem book={item} style={{ marginHorizontal: 0 }}/>}
+            renderSectionHeader={({section}) => (
+              <Text style={styles.sectionHeader}>{section.title}</Text>
+            )}
+            keyExtractor={(item, index) => index}
+          />}
     </View>
   );
 }
