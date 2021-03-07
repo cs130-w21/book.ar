@@ -12,13 +12,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build
+      - name: Build JSDocs
         uses: andstor/jsdoc-action@v1
         with:
           source_dir: ./BookAr/src
           output_dir: ./out
           recurse: true
           front_page: README.md
+      
+      - name: Cache Python Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python Dependencies
+        run: pip3 install -r server/requirements.txt
+
+      - name: Build PythonDocs
+        run: ./scripts/pydoc.sh
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

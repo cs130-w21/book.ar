@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>models</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/bryanpan/Documents/College/Junior%20Year/Winter%20Quarter/cs130/book.ar/server/models.py">/Users/bryanpan/Documents/College/Junior Year/Winter Quarter/cs130/book.ar/server/models.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;import&nbsp;pandas&nbsp;as&nbsp;pd<br>
+#&nbsp;import&nbsp;numpy&nbsp;as&nbsp;np<br>
+#&nbsp;from&nbsp;sklearn.feature_extraction.text&nbsp;import&nbsp;TfidfVectorizer<br>
+#&nbsp;from&nbsp;sklearn.metrics.pairwise&nbsp;import&nbsp;cosine_similarity<br>
+#&nbsp;import&nbsp;pickle</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="models.html#BookRecInterface">BookRecInterface</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="models.html#PopularityBookRec">PopularityBookRec</a>
+</font></dt><dt><font face="helvetica, arial"><a href="models.html#TFIDFBookRec">TFIDFBookRec</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BookRecInterface">class <strong>BookRecInterface</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#BookRecInterface">BookRecInterface</a>&nbsp;is&nbsp;a&nbsp;base&nbsp;class&nbsp;for&nbsp;other&nbsp;recommendation&nbsp;algorithms<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="BookRecInterface-load_model"><strong>load_model</strong></a>(self, input_path='saved_model/', input_model_name='book_rec_model')</dt></dl>
+
+<dl><dt><a name="BookRecInterface-make_recommendation"><strong>make_recommendation</strong></a>(self, books)</dt><dd><tt>Make&nbsp;a&nbsp;recommendation&nbsp;given&nbsp;a&nbsp;set&nbsp;of&nbsp;books.</tt></dd></dl>
+
+<dl><dt><a name="BookRecInterface-save_model"><strong>save_model</strong></a>(self, output_path='saved_model/', output_model_name='book_rec_model')</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PopularityBookRec">class <strong>PopularityBookRec</strong></a>(<a href="models.html#BookRecInterface">BookRecInterface</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#PopularityBookRec">PopularityBookRec</a>(book_ratings=None)<br>
+&nbsp;<br>
+<a href="#BookRecInterface">BookRecInterface</a>&nbsp;is&nbsp;a&nbsp;base&nbsp;class&nbsp;for&nbsp;other&nbsp;recommendation&nbsp;algorithms<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="models.html#PopularityBookRec">PopularityBookRec</a></dd>
+<dd><a href="models.html#BookRecInterface">BookRecInterface</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="PopularityBookRec-__init__"><strong>__init__</strong></a>(self, book_ratings=None)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="PopularityBookRec-compute_book_score"><strong>compute_book_score</strong></a>(self, book, metric='numRatings')</dt></dl>
+
+<dl><dt><a name="PopularityBookRec-make_recommendation"><strong>make_recommendation</strong></a>(self, books)</dt><dd><tt>Make&nbsp;a&nbsp;recommendation&nbsp;given&nbsp;a&nbsp;set&nbsp;of&nbsp;books.</tt></dd></dl>
+
+<dl><dt><a name="PopularityBookRec-train_ratings"><strong>train_ratings</strong></a>(self, books, ratings)</dt></dl>
+
+<hr>
+Methods inherited from <a href="models.html#BookRecInterface">BookRecInterface</a>:<br>
+<dl><dt><a name="PopularityBookRec-load_model"><strong>load_model</strong></a>(self, input_path='saved_model/', input_model_name='book_rec_model')</dt></dl>
+
+<dl><dt><a name="PopularityBookRec-save_model"><strong>save_model</strong></a>(self, output_path='saved_model/', output_model_name='book_rec_model')</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="models.html#BookRecInterface">BookRecInterface</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TFIDFBookRec">class <strong>TFIDFBookRec</strong></a>(<a href="models.html#BookRecInterface">BookRecInterface</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#TFIDFBookRec">TFIDFBookRec</a>(threshold=0.01)<br>
+&nbsp;<br>
+A&nbsp;recommendation&nbsp;model&nbsp;that&nbsp;uses&nbsp;a&nbsp;TFIDF&nbsp;algorithm&nbsp;to&nbsp;determine&nbsp;whether&nbsp;a&nbsp;user&nbsp;would<br>
+want&nbsp;to&nbsp;read&nbsp;a&nbsp;given&nbsp;book.<br>
+&nbsp;<br>
+Parameters:<br>
+threshold&nbsp;(float):&nbsp;a&nbsp;number&nbsp;between&nbsp;0&nbsp;and&nbsp;1&nbsp;that&nbsp;indicates&nbsp;the&nbsp;threshold&nbsp;score&nbsp;a&nbsp;book&nbsp;must&nbsp;have&nbsp;to&nbsp;be&nbsp;recommended<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="models.html#TFIDFBookRec">TFIDFBookRec</a></dd>
+<dd><a href="models.html#BookRecInterface">BookRecInterface</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TFIDFBookRec-__init__"><strong>__init__</strong></a>(self, threshold=0.01)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="TFIDFBookRec-compute_book_score"><strong>compute_book_score</strong></a>(self, book)</dt><dd><tt>Compute&nbsp;a&nbsp;book&nbsp;score&nbsp;given&nbsp;a&nbsp;list&nbsp;of&nbsp;perferred&nbsp;books.<br>
+&nbsp;<br>
+Parameters:<br>
+book&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;An&nbsp;<a href="builtins.html#object">object</a>&nbsp;with&nbsp;isbn,</tt></dd></dl>
+
+<dl><dt><a name="TFIDFBookRec-fit_new_corpus"><strong>fit_new_corpus</strong></a>(self, new_corpus)</dt><dd><tt>Given&nbsp;a&nbsp;new&nbsp;corpus&nbsp;of&nbsp;text,&nbsp;fit&nbsp;the&nbsp;data&nbsp;to&nbsp;the&nbsp;tfidf&nbsp;model.</tt></dd></dl>
+
+<dl><dt><a name="TFIDFBookRec-load_model"><strong>load_model</strong></a>(self, input_path='saved_model/', input_model_name='book_rec_model')</dt></dl>
+
+<dl><dt><a name="TFIDFBookRec-look_up_book"><strong>look_up_book</strong></a>(self, book)</dt><dd><tt>Given&nbsp;a&nbsp;book,&nbsp;return&nbsp;the&nbsp;index&nbsp;of&nbsp;its&nbsp;location&nbsp;in&nbsp;the&nbsp;dataset.<br>
+&nbsp;<br>
+Parameters:<br>
+book&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;A&nbsp;python&nbsp;<a href="builtins.html#object">object</a>&nbsp;with&nbsp;either&nbsp;an&nbsp;ISBN&nbsp;or&nbsp;title&nbsp;property</tt></dd></dl>
+
+<dl><dt><a name="TFIDFBookRec-make_recommendation"><strong>make_recommendation</strong></a>(self, books, verbose=True)</dt><dd><tt>Give&nbsp;a&nbsp;list&nbsp;of&nbsp;books,&nbsp;return&nbsp;the&nbsp;book&nbsp;with&nbsp;the&nbsp;biggest&nbsp;fit<br>
+&nbsp;<br>
+Parameters:<br>
+books&nbsp;(array&nbsp;of&nbsp;books):&nbsp;a&nbsp;list&nbsp;of&nbsp;objects&nbsp;with&nbsp;isbn,&nbsp;title,&nbsp;author,&nbsp;publisher<br>
+verbose&nbsp;(boolean):&nbsp;a&nbsp;flag&nbsp;to&nbsp;log&nbsp;the&nbsp;output</tt></dd></dl>
+
+<dl><dt><a name="TFIDFBookRec-set_user_preference"><strong>set_user_preference</strong></a>(self, preferred_books)</dt><dd><tt>Set&nbsp;the&nbsp;user&nbsp;preference,&nbsp;given&nbsp;a&nbsp;list&nbsp;of&nbsp;books<br>
+&nbsp;<br>
+Parameters:<br>
+preferred_books&nbsp;(array&nbsp;of&nbsp;books):&nbsp;a&nbsp;list&nbsp;of&nbsp;books&nbsp;with&nbsp;at&nbsp;least&nbsp;isbn&nbsp;and&nbsp;title</tt></dd></dl>
+
+<dl><dt><a name="TFIDFBookRec-train_ratings"><strong>train_ratings</strong></a>(self, books, ratings)</dt><dd><tt>Given&nbsp;the&nbsp;books&nbsp;and&nbsp;their&nbsp;ratings,&nbsp;create&nbsp;a&nbsp;merged&nbsp;list&nbsp;of&nbsp;book&nbsp;isbn&nbsp;and&nbsp;titles&nbsp;to&nbsp;ratings<br>
+&nbsp;<br>
+Parameters:<br>
+books&nbsp;(pandas.dataframe):&nbsp;a&nbsp;data&nbsp;frame&nbsp;with&nbsp;isbn,&nbsp;title,&nbsp;author,&nbsp;year,&nbsp;publisher,&nbsp;etc.<br>
+ratings&nbsp;(pandas.dataframe):&nbsp;a&nbsp;data&nbsp;frame&nbsp;with&nbsp;isbn&nbsp;and&nbsp;bookRating&nbsp;properties</tt></dd></dl>
+
+<dl><dt><a name="TFIDFBookRec-train_tfidf"><strong>train_tfidf</strong></a>(self, train_df, return_tfidf_matrix=False)</dt><dd><tt>Given&nbsp;a&nbsp;dataframe&nbsp;of&nbsp;test&nbsp;data,&nbsp;train&nbsp;the&nbsp;tfidf&nbsp;model.<br>
+&nbsp;<br>
+Parameters:<br>
+train_df&nbsp;(pandas.dataframe):&nbsp;A&nbsp;data&nbsp;frame&nbsp;with&nbsp;isbn,&nbsp;title,&nbsp;author,&nbsp;year,&nbsp;publisher,&nbsp;etc.<br>
+return_tfidf_matrix&nbsp;(boolean):&nbsp;A&nbsp;flag&nbsp;that&nbsp;sets&nbsp;the&nbsp;model&nbsp;to&nbsp;be&nbsp;a&nbsp;document-term&nbsp;matrix</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="models.html#BookRecInterface">BookRecInterface</a>:<br>
+<dl><dt><a name="TFIDFBookRec-save_model"><strong>save_model</strong></a>(self, output_path='saved_model/', output_model_name='book_rec_model')</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="models.html#BookRecInterface">BookRecInterface</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>

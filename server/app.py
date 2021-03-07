@@ -3,17 +3,79 @@ from flask import Flask, request
 from models import TFIDFBookRec
 from utils import Book
 
-
 def create_app():
+  '''
+  A wrapper function to create our flask app
+
+  / = [GET]
+  The root api. A simple test to ensure the server is running.
+
+  /recommend = [GET, POST]
+  The recommendation api.
+
+  The request body must be an JSON object with a books and prefs property.
+
+  Example:
+  {
+    "books": [
+      {
+        'isbn': '059035342X',
+        'title': "Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))",
+        'author': 'J. K. Rowling',
+        'year': 1999,
+        'publisher': 'Arthur A. Levine Books'
+      }
+    ],
+    "prefs": [
+      {
+        'isbn': '0449005615',
+        'title': 'Seabiscuit: An American Legend',
+        'author': 'LAURA HILLENBRAND',
+        'year': 2002,
+        'publisher': 'Ballantine Books',
+      }
+    ]
+    }
+  '''
   app=Flask(__name__)
 
   @app.route('/', methods=['GET'])
   def hello_world():
+    '''
+    The root api. A simple test to ensure the server is running.
+    '''
     return 'Hello World'
 
   # POST routes still require GET to be enabled for requests to work
   @app.route('/recommend', methods=['GET', 'POST'])
   def make_recommendation():
+    '''
+    The recommendation api.
+
+    The request body must be an JSON object with a books and prefs property.
+
+    Example:
+    {
+      "books": [
+        {
+          'isbn': '059035342X',
+          'title': "Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))",
+          'author': 'J. K. Rowling',
+          'year': 1999,
+          'publisher': 'Arthur A. Levine Books'
+        }
+      ],
+      "prefs": [
+        {
+          'isbn': '0449005615',
+          'title': 'Seabiscuit: An American Legend',
+          'author': 'LAURA HILLENBRAND',
+          'year': 2002,
+          'publisher': 'Ballantine Books',
+        }
+      ]
+    }
+    '''
     request_json = request.get_json()
     if not request_json:
       return f'No request body, please populate with books and prefs', 400
