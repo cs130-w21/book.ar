@@ -6,6 +6,13 @@ import {firebase} from '../../utils/firebase';
 import {labels2Genre} from '../../utils';
 import styles from './styles';
 
+/**
+ * This is the React component which defines the UI for the User Registration screen in the app.
+ *
+ * @function RegistrationScreen
+ * @param {Object} props - This is a dictionary of component properties.
+ * @namespace
+ */
 export default function RegistrationScreen({navigation}) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -13,10 +20,23 @@ export default function RegistrationScreen({navigation}) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [selectedBooks, setSelectedBooks] = useState([]);
 
+  /**
+   * This function triggers a navigation event to navigate to the Login screen.
+   *
+   * @function onFooterLinkPress
+   * @memberof RegistrationScreen
+   */
   const onFooterLinkPress = () => {
     navigation.navigate('Login');
   };
 
+  /**
+   * This function uses the data entered by the user to register a new user with Firebase
+   * and update our Firestore accordingly.
+   *
+   * @function onRegisterPress
+   * @memberof RegistrationScreen
+   */
   const onRegisterPress = () => {
     if (password !== confirmPassword) {
       alert("Passwords don't match.");

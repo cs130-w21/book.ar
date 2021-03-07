@@ -5,7 +5,13 @@ import BookModal from '../SelectScreen/BookModal';
 import BookListItem from '../../common/BookListItem/BookListItem';
 import styles from './styles';
 
-// Home screen provides recommendation based off genres the user prefers
+/**
+ * This is the React component which defines the UI for the Home screen in the app.
+ *
+ * @function HomeScreen
+ * @param {Object} props - This is a dictionary of component properties.
+ * @namespace
+ */
 export default function HomeScreen({extraData}) {
   const {name} = extraData?.user;
   const [hour, setHour ] = useState(0);
@@ -38,6 +44,8 @@ export default function HomeScreen({extraData}) {
     setRecommendations(recs);
   }
 
+  // On the initial render, get the current time and list the user's recommended
+  // books.
   useEffect(() => {
     setHour((new Date).getHours());
 
@@ -45,6 +53,7 @@ export default function HomeScreen({extraData}) {
     getRecs();
   }, []);
 
+  // Set the displayed greeting according to the time.
   useEffect(() => {
     if (17 <= hour || hour < 7) {
       setGreeting('Good Evening');

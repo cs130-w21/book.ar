@@ -6,6 +6,13 @@ import theme from './theme.style';
 
 const Tab = createBottomTabNavigator();
 
+/**
+ * This is the React component which defines the UI for the tabbed bottom navigator.
+ *
+ * @function HomeTabs
+ * @param {Object} props - This is a dictionary of component properties.
+ * @namespace
+ */
 export default function HomeTabs({extraData}) {
   return (
     <Tab.Navigator

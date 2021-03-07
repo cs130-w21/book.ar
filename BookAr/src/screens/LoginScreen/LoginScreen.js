@@ -4,14 +4,33 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {firebase} from '../../utils/firebase';
 import styles from './styles';
 
+/**
+ * This is the React component which defines the UI for the User Login screen in the app.
+ *
+ * @function LoginScreen
+ * @param {Object} props - This is a dictionary of component properties.
+ * @namespace
+ */
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  /**
+   * This function triggers a navigation event to navigate to the Registration screen.
+   *
+   * @function onFooterLinkPress
+   * @memberof LoginScreen
+   */
   const onFooterLinkPress = () => {
     navigation.navigate('Registration');
   };
 
+  /**
+   * This function uses the data entered by the user to log into Firebase.
+   *
+   * @function onLoginPress
+   * @memberof LoginScreen
+   */
   const onLoginPress = () => {
     firebase
       .auth()
