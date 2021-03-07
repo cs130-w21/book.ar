@@ -1,5 +1,29 @@
+/**
+ * @namespace Utilities
+ */
 import {firebase} from './firebase';
 
+/**
+* Label and its corresponding genre.
+* @typedef Label - The label shown to the user
+* @type {Object.<string, string>} 
+* @property {string} genre - The genre associated with this label
+*/
+
+/**
+* Genre and its associated label
+* @typedef Genre - The genre of the book
+* @type {Object.<string, string>} 
+* @property {string} label - The label associated with this genre
+*/
+
+/**
+ * Dictionary of labels and their associated genres
+ * @constant
+ * @type {Label}
+ * @memberof Utilities
+ * @default
+ */
 export const labels2Genre = {
   "Action and Adventure": "action",
   "Biographies": "biographies",
@@ -11,6 +35,14 @@ export const labels2Genre = {
   "Poetry": "poetry",
 };
 
+
+/**
+ * Dictionary of genres and their associated labels
+ * @constant
+ * @type {Genre}
+ * @memberof Utilities
+ * @default
+ */
 export const genre2Labels = {
   "action": "Action and Adventure",
   "biographies": "Biographies",
@@ -22,10 +54,28 @@ export const genre2Labels = {
   "poetry": "Poetry",
 };
 
+/**
+ * This function shuffles an array
+ *
+ * @function shuffle
+ * @param {Array} array - The array to be shuffled
+ * @memberof Utilities
+ */
 const shuffle = (array) => {
   return array.sort(() => Math.random() - 0.5);
 }
 
+/**
+ * This function searches for a given book using the Google Books API and returns a book object.
+ *
+ * @function searchBookOnGoogle
+ * @param {Object} bookToSearch - The book to search for
+ * @param {string} bookToSearch.title - The target book title
+ * @param {string} bookToSearch.author - The target book author
+ * @param {boolean} verbose - Whether to log the found book
+ * @returns {Object} The first result from the Google Books API
+ * @memberof Utilities
+*/
 export const searchBookOnGoogle = async (bookToSearch, verbose = false) => {
   let response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${bookToSearch.title}${bookToSearch.author ? ('+inauthor:' + bookToSearch.author) : ''}`, { method: 'GET' });
   let json = await response.json();
@@ -46,6 +96,13 @@ export const searchBookOnGoogle = async (bookToSearch, verbose = false) => {
   return book;
 }
 
+/**
+ * This function gets the user's preferred genres from Firestore.
+ *
+ * @function getGenres
+ * @returns {string[]} A list of genres.
+ * @memberof Utilities
+ */
 export const getGenres = async () => {
   const uid = firebase.auth().currentUser.uid;
   const usersDoc = firebase.firestore().collection('users').doc(uid);
@@ -58,6 +115,14 @@ export const getGenres = async () => {
   return genres;
 }
 
+/**
+ * This function gets books for given genres
+ *
+ * @function getBooksFromGenres
+ * @param {Array} genres - The genres for which books are to be got
+ * @param {number} [numOfBooks=1] - The number of books to return 
+ * @memberof Utilities
+ */
 export const getBooksFromGenres = async (genres, numOfBooks = 1) => {
   const ret = await genres.reduce(async (acc, genre) => {
     return [...(await acc), ...(await getBooksFromGenre(genre, numOfBooks))];
@@ -65,6 +130,14 @@ export const getBooksFromGenres = async (genres, numOfBooks = 1) => {
   return ret;
 }
 
+/**
+ * This function gets books for a given genre
+ *
+ * @function getBooksFromGenres
+ * @param {string} genre - The genre for which books are to be got
+ * @param {number} [numOfBooks=1] - The number of books to return 
+ * @memberof Utilities
+ */
 export const getBooksFromGenre = async (genre, numOfBooks = 1) => {
   const booksRef = firebase.firestore().collection('books');
   const books = await booksRef.doc(genre).get();
@@ -73,6 +146,13 @@ export const getBooksFromGenre = async (genre, numOfBooks = 1) => {
   return await Promise.all(selectedBooks.map(async book => await searchBookOnGoogle(book, true)));
 }
 
+/**
+ * This function retrieves a user's reading list from Firestore.
+ *
+ * @function getReadingBooks
+ * @returns {Object[]} The user's reading list.
+ * @memberof Utilities
+ */
 export const getReadingBooks = async () => {
   const uid = firebase.auth().currentUser.uid;
   const usersDoc = firebase.firestore().collection('users').doc(uid);
@@ -85,6 +165,13 @@ export const getReadingBooks = async () => {
   return reading;
 }
 
+/**
+ * This function adds a book to a user's reading list on Firestore.
+ *
+ * @function addToReading
+ * @param {Object} book - The book to add.
+ * @memberof Utilities
+ */
 export const addToReading = async (book) => {
   const uid = firebase.auth().currentUser.uid;
   const usersDoc = firebase.firestore().collection('users').doc(uid);
@@ -106,6 +193,13 @@ export const addToReading = async (book) => {
   });
 }
 
+/**
+ * This function removes a book from a user's reading list on Firestore.
+ *
+ * @function removeFromReading
+ * @param {Object} book - The book to remove.
+ * @memberof Utilities
+ */
 export const removeFromReading = async (book) => {
   const uid = firebase.auth().currentUser.uid;
   const usersDoc = firebase.firestore().collection('users').doc(uid);
@@ -125,6 +219,13 @@ export const removeFromReading = async (book) => {
   await usersDoc.update({ reading: reading });
 }
 
+/**
+ * This function adds a book to a user's preferred books on Firestore.
+ *
+ * @function addToPrefs
+ * @param {Object} book - The book to add.
+ * @memberof Utilities
+ */
 export const addToPrefs = async (book) => {
   const uid = firebase.auth().currentUser.uid;
   const usersDoc = firebase.firestore().collection('users').doc(uid);

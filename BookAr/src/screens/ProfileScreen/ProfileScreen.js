@@ -5,6 +5,13 @@ import {labels2Genre,genre2Labels,getGenres} from '../../utils';
 import styles from './styles';
 import {firebase} from '../../utils/firebase';
 
+/**
+ * This is the React component which defines the UI for the User Profile screen in the app.
+ *
+ * @function ProfileScreen
+ * @param {Object} props - This is a dictionary of component properties.
+ * @namespace
+ */
 export default function ProfileScreen({ navigation, extraData }) {
   const { user, signOut } = extraData;
   const [selectedBooks, setSelectedBooks] = useState([]);
