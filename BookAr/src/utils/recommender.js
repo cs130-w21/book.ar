@@ -1,3 +1,7 @@
+/**
+ * @namespace Recommender
+ */
+
 import {firebase} from './firebase';
 
 /**
@@ -21,7 +25,7 @@ import {firebase} from './firebase';
  * about loading status.
  *
  * @callback loadingCallback
- * @param{Object} loadingInfo - An object describing loading status and information.
+ * @param {Object} loadingInfo - An object describing loading status and information.
  * @param {boolean} loadingInfo.isLoading - Whether or not loading is in progress.
  * @param {string} loadingInfo.msg - A message to display explaining the undergoing process.
  */
@@ -43,6 +47,7 @@ import {firebase} from './firebase';
  * @param {bookListCallback} setRecBooks - A React state modifier callback to set the list of
  *                                         recommended books.
  * @param {loadingCallback} setLoading - A React state modifier callback to set loading status.
+ * @memberof Recommender
  */
 export async function getRecommendedBooks(base64, setRecBooks, setLoading) {
   // First, use the Cloud Vision API to detect text within the image.
