@@ -4,7 +4,8 @@ import {RNCamera} from 'react-native-camera';
 import styles from './styles';
 import * as ImagePicker from '../../utils/image_picker';
 import * as Recommender from '../../utils/recommender';
-import BookListItem from './BookListItem.js';
+import BookListItem from '../../common/BookListItem/BookListItem';
+import BookModal from './BookModal';
 
 /**
  * This is the React component which defines the UI for the Select screen in the app.
@@ -19,6 +20,7 @@ export default function SelectScreen({ navigation, extraData }) {
   const [ snapBtnText, setSnapBtnText ] = useState('SNAP');
   const [ recBooks, setRecBooks ] = useState(null);
   const [ loading, setLoading ] = useState({ isLoading: false, msg: "loading stuff" });
+  const [ selectedBook, setSelectedBook ] = useState(null);
 
   // const cameraRef = useRef(null);
   const pictureTakenRef = useRef(false);
@@ -33,8 +35,8 @@ export default function SelectScreen({ navigation, extraData }) {
    * @inner
    */
   const takePicture = async (camera) => {
-    pictureTakenRef.current = !(pictureTakenRef.current);
     if (camera && pictureTakenRef.current == false) {
+      pictureTakenRef.current = !(pictureTakenRef.current);
       const options = {base64: true, quality: 1, pauseAfterCapture: true}; //PAUSE ALLOWS FOR STATIC IMAGE ON SCREEN
       const data = await camera.takePictureAsync(options);
       setSnapBtnText('AGAIN');
@@ -45,6 +47,7 @@ export default function SelectScreen({ navigation, extraData }) {
           setRecBooks([]);
         });
     } else if(camera){
+      pictureTakenRef.current = !(pictureTakenRef.current);
       camera.resumePreview(); //CALL THIS TO RESUME PREVIEW / BE ABLE TO TAKE ANOTHER
       setSnapBtnText('SNAP');
       setRecBooks(null);
@@ -83,13 +86,25 @@ export default function SelectScreen({ navigation, extraData }) {
       return (<FlatList
         style={styles.response}
         data={recBooks}
-        renderItem={({item}) => (<BookListItem id={item.title} book={item} />)}
+        renderItem={({item}) => (
+          <BookListItem
+            id={item.title}
+            book={item}
+            onPress={() => { setSelectedBook(item) }}
+          />
+        )}
       />)
     }
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      {selectedBook !== null && 
+        <BookModal
+          showModal={selectedBook !== null}
+          book={selectedBook}
+          onDismiss={() => {setSelectedBook(null)}}
+        />}
       <RNCamera
         // ref={cameraRef}
         style={styles.preview}
@@ -123,7 +138,7 @@ export default function SelectScreen({ navigation, extraData }) {
                       quality: 1,
                     },
                     (data) => {
-                      CloudVision.getRecommendedBooks(data.base64, setRecBooks, setLoading);
+                      Recommender.getRecommendedBooks(data.base64, setRecBooks, setLoading);
                     },
                   )
                 }

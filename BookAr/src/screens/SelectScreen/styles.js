@@ -40,31 +40,63 @@ export default StyleSheet.create({
   response: {
     flex: 1,
   },
-  listItem: {
-    flexDirection: 'row',
-    height: 150,
-    margin: 15,
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modal: {
     backgroundColor: 'white',
-    elevation: 2
+    borderRadius: 20,
+    padding: 15,
+    width: '90%',
+    height: '80%'
   },
-  listItemImg: {
+  modalBg: {
+    width: '100%',
     height: '100%',
-    width: '30%'
+    position: 'absolute',
+    backgroundColor: '#000a'
   },
-  listItemBody: {
-    flexDirection: 'column',
+  modalBook: {
+    alignItems: 'center',
+    flex: 1,
+    width: '100%',
+  },
+  modalBookImg: {
+    width: '50%',
+    height: '50%',
+  },
+  modalBookTitle: {
+    fontWeight: 'bold',
+    fontSize: 26,
+    marginTop: 10
+  },
+  modalBookSubtitle: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginTop: 10,
+    color: '#888'
+  },
+  modalBookBodyText: {
+    margin: 10,
+    textAlign: 'center',
+    fontStyle: 'italic'
+  },
+  modalButtons: {
+    marginTop: 10,
+    paddingVertical: 20,
+    flex: 0.2,
+    textAlign: 'center',
+    justifyContent: 'space-around',
+    alignItems: 'stretch'
+  },
+  modalButton: {
+    flex: 1,
+    backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 10,
-    width: '70%'
-  },
-  listItemTitle: {
-    fontWeight: 'bold',
-    fontSize: 18
-  },
-  listItemSubtitle: {
-    fontWeight: 'bold',
-    color: '#888',
-    fontSize: 16
-  },
-  listItemTitleBodyText: {
+    borderRadius: 10
   }
 });

@@ -3,6 +3,7 @@
  */
 
 import {firebase} from './firebase';
+import {searchBookOnGoogle} from './index';
 
 /**
  * This callback type is called `bookListCallback` and defines a callback for a React
@@ -139,22 +140,7 @@ export async function getRecommendedBooks(base64, setRecBooks, setLoading) {
   let finalBooks = []
   console.log('getting book data');
   for (let recBook of recJson) {
-    let finalResponse = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${recBook.title}`, { method: 'GET' });
-    let finalJson = await finalResponse.json();
-    if (!finalJson.items) return;
-    let finalJsonBook = finalJson.items[0].volumeInfo;
-    let finalBook = {
-      title: finalJsonBook.title,
-      key: finalJsonBook.title,
-      author: finalJsonBook.authors?.length > 0 ? finalJsonBook.authors[0] : null,
-      description: finalJsonBook.description,
-      publisher: finalJsonBook.publisher,
-      year: finalJsonBook.publishedDate,
-      isbn: finalJsonBook.industryIdentifiers.find(el => el.type && el.type.startsWith('ISBN').identifier),
-      coverUrl: finalJsonBook.imageLinks?.thumbnail
-    };
-
-    console.log(finalBook);
+    let finalBook = await searchBookOnGoogle(recBook, true);
     finalBooks.push(finalBook);
   }
 
