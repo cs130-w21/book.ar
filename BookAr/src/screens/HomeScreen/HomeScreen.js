@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {RefreshControl, Alert, FlatList, ScrollView, ActivityIndicator, Text, View, SectionList} from 'react-native';
 import { genre2Labels, getBooksFromGenre, getReadingBooks, removeFromReading,addToPrefs } from '../../utils';
+import BookModal from '../SelectScreen/BookModal';
 import BookListItem from '../../common/BookListItem/BookListItem';
 import styles from './styles';
 
@@ -13,6 +14,7 @@ export default function HomeScreen({extraData}) {
   const [loading, setLoading] = useState(true);
   const [reading, setReading] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
 
   const getReading = async () => {
     const reading = await getReadingBooks();
@@ -96,6 +98,12 @@ export default function HomeScreen({extraData}) {
         />
       }
     >
+      {selectedBook !== null && 
+        <BookModal
+          showModal={selectedBook !== null}
+          book={selectedBook}
+          onDismiss={() => {setSelectedBook(null)}}
+        />}
       <View style={styles.greetingContainer}>
         <Text style={styles.greeting}>{greeting}</Text> 
         <Text style={styles.name}>{name.split(' ')[0]} 👋 </Text>
@@ -125,7 +133,8 @@ export default function HomeScreen({extraData}) {
           <SectionList
             scrollEnabled={false}
             sections={recommendations}
-            renderItem={({item}) => <BookListItem book={item} style={{ marginHorizontal: 0 }}/>}
+            renderItem={({item}) =>
+                (<BookListItem book={item} style={{ marginHorizontal: 0 }} onPress={() => setSelectedBook(item)}/>)}
             renderSectionHeader={({section}) => (
               <Text style={styles.sectionHeader}>{section.title}</Text>
             )}
