@@ -17,14 +17,14 @@ export default function BookListItem(props) {
       onPress={props.onPress}
       activeOpacity={props.onPress ? 0.2 : 1}
     >
-      <Image style={styles.listItemImg} source={{ uri: props.book.coverUrl }} />
+      <Image style={styles.listItemImg} source={{ uri: props?.book?.coverUrl }} />
       <View style={styles.listItemBody}>
-        <Text style={styles.listItemTitle}>{props.book.title}</Text>
-        <Text style={styles.listItemSubtitle}>{props.book.author}</Text>
+        <Text style={styles.listItemTitle}>{props?.book?.title}</Text>
+        <Text style={styles.listItemSubtitle}>{props?.book?.author}</Text>
         <Text
           style={styles.listItemBodyText}
           numberOfLines={3}
-        >{props.book.description}</Text>
+        >{props?.book?.description}</Text>
       </View>
     </TouchableOpacity>
   );
