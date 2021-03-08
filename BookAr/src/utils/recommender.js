@@ -3,7 +3,7 @@
  */
 
 import {firebase} from './firebase';
-import {searchBookOnGoogle} from './index';
+import {searchBookOnGoogle, getBooksFromGenres} from './index';
 
 /**
  * This callback type is called `bookListCallback` and defines a callback for a React
@@ -122,7 +122,10 @@ export async function getRecommendedBooks(base64, setRecBooks, setLoading) {
     return;
   }
   const prefs = doc.data().prefs;
+  const genreBooks = await getBooksFromGenres(doc.data().genres, 4);
   console.log('user prefs', prefs);
+  console.log('user prefs', genreBooks);
+  const userPrefs = [...(prefs || []), ...(genreBooks?.map(b => { return { title: b?.title, author: b?.author };}) || [])];
 
   // We send a request to our Recommendation server with the list of detected books and the user's preferences.
   const recResponse = await fetch('http://129.146.110.3/recommend', {
@@ -130,7 +133,7 @@ export async function getRecommendedBooks(base64, setRecBooks, setLoading) {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ books: titles, prefs: prefs })
+    body: JSON.stringify({ books: titles, prefs: userPrefs })
   });
   let recJson = await recResponse.json();
   console.log(recJson);
